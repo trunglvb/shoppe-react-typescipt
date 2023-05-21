@@ -1,7 +1,9 @@
+import useRouteElement from './hooks/useRouteElement'
 function App() {
+  const routeElement = useRouteElement()
   return (
     <>
-      <div className='text-red-500'>trung</div>
+      <div>{routeElement}</div>
     </>
   )
 }
