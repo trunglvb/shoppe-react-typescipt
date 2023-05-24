@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import Input from 'src/components/Input'
 import { getRules } from 'src/utils/rules'
 
 interface IFormData {
@@ -20,30 +21,30 @@ const Login = () => {
   const rules = getRules()
   return (
     <div className='bg-orange'>
-      <div className='mx-auto max-w-7xl px-4'>
+      <div className='container'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
             <form className='rounded bg-white p-10 shadow-sm' onSubmit={onSubmit} noValidate>
               <div className='text-2xl'>Đăng nhập</div>
-              <div className='mt-8 '>
-                <input
-                  type='email'
-                  className='w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
-                  placeholder='Email'
-                  {...register('email', rules.email)}
-                />
-                <div className='mt-1 min-h-[1rem] text-sm text-red-600'>{errors.email?.message}</div>
-              </div>
-              <div className='mt-1'>
-                <input
-                  type='password'
-                  className='w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
-                  placeholder='Password'
-                  autoComplete='on'
-                  {...register('password', rules.password)}
-                />
-                <div className='mt-1 min-h-[1rem] text-sm text-red-600'>{errors.password?.message}</div>
-              </div>
+              <Input
+                type='email'
+                className='mt-8'
+                placeholder='Email'
+                name='email'
+                register={register}
+                errorMessage={errors.email?.message}
+                rules={rules.email}
+              />
+              <Input
+                type='password'
+                className='mt-1'
+                placeholder='Password'
+                name='password'
+                autoComplete='on'
+                register={register}
+                errorMessage={errors.password?.message}
+                rules={rules.password}
+              />
               <div className='mt-3'>
                 <button
                   type='submit'
