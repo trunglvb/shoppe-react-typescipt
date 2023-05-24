@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { rules } from 'src/utils/rules'
+import { getRules } from 'src/utils/rules'
 
 interface IFormData {
   email: string
@@ -16,6 +16,8 @@ const Login = () => {
   const onSubmit = handleSubmit((data) => {
     console.log(data)
   })
+
+  const rules = getRules()
   return (
     <div className='bg-orange'>
       <div className='mx-auto max-w-7xl px-4'>
@@ -37,6 +39,7 @@ const Login = () => {
                   type='password'
                   className='w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
                   placeholder='Password'
+                  autoComplete='on'
                   {...register('password', rules.password)}
                 />
                 <div className='mt-1 min-h-[1rem] text-sm text-red-600'>{errors.password?.message}</div>
