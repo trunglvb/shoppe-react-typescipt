@@ -1,13 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { getRules } from 'src/utils/rules'
+import { schema, Schema } from 'src/utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
 import Input from 'src/components/Input'
 
-interface IFormData {
-  email: string
-  password: string
-  confirm_password: string
-}
+type IFormData = Schema
 const Register = () => {
   const {
     register,
@@ -15,9 +12,10 @@ const Register = () => {
     // watch => // de theo doi hanh dong onChange
     getValues,
     formState: { errors }
-  } = useForm<IFormData>()
+  } = useForm<IFormData>({
+    resolver: yupResolver(schema)
+  })
   //useForm({ mode: 'all' })
-  const rules = getRules(getValues)
 
   const onSubmit = handleSubmit(
     (data) => {
@@ -43,7 +41,7 @@ const Register = () => {
                 name='email'
                 register={register}
                 errorMessage={errors.email?.message}
-                rules={rules.email}
+                // rules={rules.email}
               />
               <Input
                 type='password'
@@ -53,7 +51,7 @@ const Register = () => {
                 autoComplete='on'
                 register={register}
                 errorMessage={errors.password?.message}
-                rules={rules.password}
+                // rules={rules.password}
               />
               <Input
                 type='password'
@@ -63,7 +61,7 @@ const Register = () => {
                 register={register}
                 autoComplete='on'
                 errorMessage={errors.confirm_password?.message}
-                rules={rules.confirm_password}
+                // rules={rules.confirm_password}
               />
               <div className='mt-3'>
                 <button

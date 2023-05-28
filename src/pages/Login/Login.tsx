@@ -1,24 +1,22 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import Input from 'src/components/Input'
-import { getRules } from 'src/utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { schema, Schema } from 'src/utils/rules'
 
-interface IFormData {
-  email: string
-  password: string
-}
+type IFormData = Omit<Schema, 'confirm_password'>
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<IFormData>()
+  } = useForm<IFormData>({
+    resolver: yupResolver(schema)
+  })
 
   const onSubmit = handleSubmit((data) => {
     console.log(data)
   })
-
-  const rules = getRules()
   return (
     <div className='bg-orange'>
       <div className='container'>
@@ -33,7 +31,6 @@ const Login = () => {
                 name='email'
                 register={register}
                 errorMessage={errors.email?.message}
-                rules={rules.email}
               />
               <Input
                 type='password'
@@ -43,7 +40,6 @@ const Login = () => {
                 autoComplete='on'
                 register={register}
                 errorMessage={errors.password?.message}
-                rules={rules.password}
               />
               <div className='mt-3'>
                 <button
