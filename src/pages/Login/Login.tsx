@@ -1,21 +1,50 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import Input from 'src/components/Input'
+import { useMutation } from '@tanstack/react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, Schema } from 'src/utils/rules'
+import { loginAccount } from 'src/apis/auth.api'
+import { omit } from 'lodash'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { IResponseApi } from 'src/types/utils.type'
 
 type IFormData = Omit<Schema, 'confirm_password'>
+const loginSchema = schema.omit(['confirm_password'])
 const Login = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<IFormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(loginSchema)
+  })
+  const loginAccountMutation = useMutation({
+    mutationFn: (body: IFormData) => loginAccount(body)
   })
 
   const onSubmit = handleSubmit((data) => {
     console.log(data)
+    loginAccountMutation.mutate(data, {
+      onSuccess: (data) => {
+        //
+      },
+      onError: (error) => {
+        console.log(error)
+        if (isAxiosUnprocessableEntityError<IResponseApi<IFormData>>(error)) {
+          const formError = error.response?.data.data
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof IFormData, {
+                message: formError[key as keyof IFormData],
+                type: 'Server'
+              })
+            })
+          }
+        }
+      }
+    })
   })
   return (
     <div className='bg-orange'>
