@@ -5,7 +5,6 @@ import { useMutation } from '@tanstack/react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, Schema } from 'src/utils/rules'
 import { loginAccount } from 'src/apis/auth.api'
-import { omit } from 'lodash'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { IResponseApi } from 'src/types/utils.type'
 
