@@ -41,6 +41,7 @@ const Header = () => {
               />
             </div>
             <div>lvbtrung</div>
+            <div>MacBook</div>
           </div>
         </div>
       </div>
