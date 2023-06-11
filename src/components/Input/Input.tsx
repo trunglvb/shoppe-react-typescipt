@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RegisterOptions, UseFormRegister } from 'react-hook-form'
 
 interface IInputProps {

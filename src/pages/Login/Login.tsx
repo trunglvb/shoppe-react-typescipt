@@ -24,7 +24,6 @@ const Login = () => {
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
     loginAccountMutation.mutate(data, {
       onSuccess: (data) => {
         //
