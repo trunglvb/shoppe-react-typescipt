@@ -86,6 +86,7 @@ const Header = () => {
               />
             </div>
             <div>lvbtrung</div>
+            <div>MacBook</div>
           </div>
         </div>
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
