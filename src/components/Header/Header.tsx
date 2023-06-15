@@ -1,37 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link } from 'react-router-dom'
-import { useRef, useState } from 'react'
-import { FloatingPortal, useFloating, arrow } from '@floating-ui/react'
 import LogoHeader from '../LogoHeader'
+import Popover from '../Popover'
 
 const Header = () => {
-  const arrowRef = useRef<HTMLElement>(null)
-  const [isOpen, setIsOpen] = useState(false)
-  const { x, y, refs, strategy, middlewareData } = useFloating({
-    //strategy dinh nghia viec hien thi fixed hay absolute
-    middleware: [
-      arrow({
-        element: arrowRef
-      })
-    ]
-  })
-
-  const showPopover = () => {
-    setIsOpen(true)
-  }
-
-  const hidePopover = () => {
-    setIsOpen(false)
-  }
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
-        <div className='flex justify-end '>
-          <div
-            className='flex cursor-pointer items-center py-1 hover:text-gray-300'
-            ref={refs.setReference}
-            onMouseEnter={showPopover}
-            onMouseLeave={hidePopover}
+        <div className='flex justify-end'>
+          <Popover
+            placement='bottom-end'
+            className='text-[13px]'
+            renderPopover={
+              <div className='relative flex flex-col items-start justify-start rounded-sm border border-gray-200 bg-white py-2 pl-2 pr-28 text-[13px] shadow-md'>
+                <button className='px-3 py-2 hover:text-orange'>Tiếng Việt</button>
+                <button className='mt-2 px-3 py-2 hover:text-orange'>English</button>
+              </div>
+            }
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -58,36 +43,33 @@ const Header = () => {
             >
               <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
             </svg>
-          </div>
-          <FloatingPortal>
-            {isOpen && (
-              <div
-                ref={refs.setFloating}
-                style={{
-                  position: strategy,
-                  top: y ?? 0,
-                  left: x ?? 0,
-                  width: 'max-content'
-                }}
-              >
-                <div className='relative flex flex-col rounded-sm border border-gray-200 bg-white shadow-md'>
-                  <button className='px-3 py-2 hover:text-orange'>Tiếng Việt</button>
-                  <button className='mt-2 px-3 py-2 hover:text-orange'>English</button>
-                </div>
+          </Popover>
+          <Popover
+            placement='bottom-end'
+            className='text-xs'
+            renderPopover={
+              <div className='relative mr-10 flex w-full flex-col rounded-sm border border-gray-200 bg-white text-[13px] shadow-md'>
+                <Link to='/' className='block w-full px-4 py-3 text-left hover:bg-slate-50 hover:text-cyan-500'>
+                  Tài khoản của tôi
+                </Link>
+                <Link to='/' className='block w-full px-4 py-3 text-left hover:bg-slate-50 hover:text-cyan-500'>
+                  Đơn mua
+                </Link>
+                <button className=' w-full px-4 py-3 text-left hover:bg-slate-50 hover:text-cyan-500'>Đăng xuất</button>
               </div>
-            )}
-          </FloatingPortal>
-          <div className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'>
-            <div className='mr-2 h-4 w-4 flex-shrink-0'>
-              <img
-                className='h-full w-full rounded-full object-cover'
-                src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
-                alt='avatar'
-              />
+            }
+          >
+            <div className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'>
+              <div className='mr-2 h-4 w-4 flex-shrink-0'>
+                <img
+                  className='h-full w-full rounded-full object-cover'
+                  src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
+                  alt='avatar'
+                />
+              </div>
+              <div>lvbtrung</div>
             </div>
-            <div>lvbtrung</div>
-            <div>MacBook</div>
-          </div>
+          </Popover>
         </div>
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
           <div className='col-span-2'>
@@ -119,24 +101,120 @@ const Header = () => {
               </button>
             </div>
           </form>
-          <div className='col-span-1 flex justify-center text-xl'>
-            <Link to='/'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='h-6 w-6'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-                />
-              </svg>
-            </Link>
-          </div>
+          <Popover
+            className='justify-center'
+            placement='bottom-end'
+            initialOpen
+            renderPopover={
+              <div className='relative max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
+                <div className='p-2'>
+                  <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
+                  <div className='mt-5'>
+                    <div className='mt-4 flex'>
+                      <div className='flex-shrink-0'>
+                        <img
+                          className='h-11 w-11 object-cover'
+                          src='https://down-vn.img.susercontent.com/file/fb17306f77f52c338171a3631a57bebb_tn'
+                          alt='anh'
+                        />
+                      </div>
+                      <div className='ml-2 flex-grow overflow-hidden'>
+                        <div className='truncate'>
+                          [HOT TREND] ÁO KHOÁC KAKI JEAN NAM ĐẸP THỜI TRANG MỚI NHẤT 2019 KKN01
+                        </div>
+                      </div>
+                      <div className='ml-2 flex-shrink-0 text-orange'>250000d</div>
+                    </div>
+                    <div className='mt-4 flex'>
+                      <div className='flex-shrink-0'>
+                        <img
+                          className='h-11 w-11 object-cover'
+                          src='https://down-vn.img.susercontent.com/file/fb17306f77f52c338171a3631a57bebb_tn'
+                          alt='anh'
+                        />
+                      </div>
+                      <div className='ml-2 flex-grow overflow-hidden'>
+                        <div className='truncate'>
+                          [HOT TREND] ÁO KHOÁC KAKI JEAN NAM ĐẸP THỜI TRANG MỚI NHẤT 2019 KKN01
+                        </div>
+                      </div>
+                      <div className='ml-2 flex-shrink-0 text-orange'>250000d</div>
+                    </div>
+                    <div className='mt-4 flex'>
+                      <div className='flex-shrink-0'>
+                        <img
+                          className='h-11 w-11 object-cover'
+                          src='https://down-vn.img.susercontent.com/file/fb17306f77f52c338171a3631a57bebb_tn'
+                          alt='anh'
+                        />
+                      </div>
+                      <div className='ml-2 flex-grow overflow-hidden'>
+                        <div className='truncate'>
+                          [HOT TREND] ÁO KHOÁC KAKI JEAN NAM ĐẸP THỜI TRANG MỚI NHẤT 2019 KKN01
+                        </div>
+                      </div>
+                      <div className='ml-2 flex-shrink-0 text-orange'>250000d</div>
+                    </div>
+                    <div className='mt-4 flex'>
+                      <div className='flex-shrink-0'>
+                        <img
+                          className='h-11 w-11 object-cover'
+                          src='https://down-vn.img.susercontent.com/file/fb17306f77f52c338171a3631a57bebb_tn'
+                          alt='anh'
+                        />
+                      </div>
+                      <div className='ml-2 flex-grow overflow-hidden'>
+                        <div className='truncate'>
+                          [HOT TREND] ÁO KHOÁC KAKI JEAN NAM ĐẸP THỜI TRANG MỚI NHẤT 2019 KKN01
+                        </div>
+                      </div>
+                      <div className='ml-2 flex-shrink-0 text-orange'>250000d</div>
+                    </div>
+                    <div className='mt-4 flex'>
+                      <div className='flex-shrink-0'>
+                        <img
+                          className='h-11 w-11 object-cover'
+                          src='https://down-vn.img.susercontent.com/file/fb17306f77f52c338171a3631a57bebb_tn'
+                          alt='anh'
+                        />
+                      </div>
+                      <div className='ml-2 flex-grow overflow-hidden'>
+                        <div className='truncate'>
+                          [HOT TREND] ÁO KHOÁC KAKI JEAN NAM ĐẸP THỜI TRANG MỚI NHẤT 2019 KKN01
+                        </div>
+                      </div>
+                      <div className='ml-2 flex-shrink-0 text-orange'>250000d</div>
+                    </div>
+                  </div>
+                  <div className='mt-6 flex items-center justify-between'>
+                    <div className='text-xs capitalize text-gray-500'>Thêm vào giỏ hàng</div>
+                    <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:opacity-80'>
+                      Xem giỏ hàng
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          >
+            <div className='col-span-1 flex items-center justify-center text-xl'>
+              <Link to='/'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='h-6 w-6'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+                  />
+                </svg>
+              </Link>
+            </div>
+          </Popover>
         </div>
       </div>
     </div>
