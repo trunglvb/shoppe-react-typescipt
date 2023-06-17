@@ -49,7 +49,7 @@ const Header = () => {
             className='text-xs'
             renderPopover={
               <div className='relative mr-10 flex w-full flex-col rounded-sm border border-gray-200 bg-white text-[13px] shadow-md'>
-                <Link to='/' className='block w-full px-4 py-3 text-left hover:bg-slate-50 hover:text-cyan-500'>
+                <Link to='/profile' className='block w-full px-4 py-3 text-left hover:bg-slate-50 hover:text-cyan-500'>
                   Tài khoản của tôi
                 </Link>
                 <Link to='/' className='block w-full px-4 py-3 text-left hover:bg-slate-50 hover:text-cyan-500'>
@@ -104,7 +104,6 @@ const Header = () => {
           <Popover
             className='justify-center'
             placement='bottom-end'
-            initialOpen
             renderPopover={
               <div className='relative max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
                 <div className='p-2'>
