@@ -7,7 +7,7 @@ import Input from 'src/components/Input'
 import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
-import { IResponseApi } from 'src/types/utils.type'
+import { IErrorResponseApi } from 'src/types/utils.type'
 
 type IFormData = Schema
 const Register = () => {
@@ -29,11 +29,11 @@ const Register = () => {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         //
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<IResponseApi<Omit<IFormData, 'confirm_password'>>>(error)) {
+        if (isAxiosUnprocessableEntityError<IErrorResponseApi<Omit<IFormData, 'confirm_password'>>>(error)) {
           const formError = error.response?.data.data
           if (formError) {
             Object.keys(formError).forEach((key) => {

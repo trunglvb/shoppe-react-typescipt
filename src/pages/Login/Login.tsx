@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, Schema } from 'src/utils/rules'
 import { loginAccount } from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
-import { IResponseApi } from 'src/types/utils.type'
+import { IErrorResponseApi } from 'src/types/utils.type'
 
 type IFormData = Omit<Schema, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
@@ -25,12 +25,11 @@ const Login = () => {
 
   const onSubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         //
       },
       onError: (error) => {
-        console.log(error)
-        if (isAxiosUnprocessableEntityError<IResponseApi<IFormData>>(error)) {
+        if (isAxiosUnprocessableEntityError<IErrorResponseApi<IFormData>>(error)) {
           const formError = error.response?.data.data
           if (formError) {
             Object.keys(formError).forEach((key) => {

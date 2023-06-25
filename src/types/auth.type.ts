@@ -1,7 +1,7 @@
 import { IUser } from './user.type'
-import { IResponseApi } from './utils.type'
+import { ISuccessResponseApi } from './utils.type'
 
-export type IAuthResponse = IResponseApi<{
+export type IAuthResponse = ISuccessResponseApi<{
   access_token: string
   expires: string
   refresh_token?: string
