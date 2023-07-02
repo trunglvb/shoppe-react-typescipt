@@ -2,13 +2,18 @@ import axios, { AxiosError, type AxiosInstance } from 'axios'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { toast } from 'react-toastify'
 import { IAuthResponse } from 'src/types/auth.type'
-import { removeAccessTokenFromLocalStorage, saveAccessTokenToLocalStorage } from './auth'
+import {
+  getAccessTokenFromLocalStorage,
+  clearLocalStorage,
+  saveAccessTokenToLocalStorage,
+  saveProfileToLocalStorage
+} from './auth'
 
 class Http {
   instance: AxiosInstance
-  private accessToken: string
+  private accessToken: string // luu tren RAM
   constructor() {
-    this.accessToken = ''
+    this.accessToken = getAccessTokenFromLocalStorage()
     this.instance = axios.create({
       baseURL: 'https://api-ecom.duthanhduoc.com',
       timeout: 10000,
@@ -16,15 +21,29 @@ class Http {
         'Content-Type': 'application/json'
       }
     })
+    //voi route can xac thuc, gui token len bang header voi key la authorization
+    this.instance.interceptors.request.use(
+      (config) => {
+        if (this.accessToken && config?.headers) {
+          config.headers.authorization = this.accessToken
+          return config
+        }
+        return config
+      },
+      (error) => {
+        return Promise.reject(error)
+      }
+    )
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
         if (url === '/login' || url === '/register') {
           this.accessToken = (response.data as IAuthResponse).data.access_token
           saveAccessTokenToLocalStorage(this.accessToken)
+          saveProfileToLocalStorage(response.data.data.user)
         } else if (url === '/logout') {
           this.accessToken = ''
-          removeAccessTokenFromLocalStorage()
+          clearLocalStorage()
         }
         toast.success(response?.data.message)
         return response
