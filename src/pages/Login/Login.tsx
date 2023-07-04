@@ -33,7 +33,6 @@ const Login = () => {
   const onSubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
       onSuccess: (res) => {
-        console.log(res.data.data.user)
         setIsAuthenticated(true)
         setProfile(res?.data.data.user)
         navigate(path.home)
