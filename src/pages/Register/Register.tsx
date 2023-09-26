@@ -22,6 +22,7 @@ const Register = () => {
     handleSubmit,
     setError,
     // watch => // de theo doi hanh dong onChange
+    // getValues,
     formState: { errors }
   } = useForm<IFormData>({
     resolver: yupResolver(schema)
@@ -33,6 +34,8 @@ const Register = () => {
   })
 
   const onSubmit = handleSubmit((data) => {
+    // const value = getValues()
+    // console.log(value)
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
       onSuccess: (res) => {
