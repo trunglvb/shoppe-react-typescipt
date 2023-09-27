@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/components/Input'
 import { useMutation } from '@tanstack/react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { schema, Schema } from 'src/utils/rules'
+import { schema, ISchema } from 'src/utils/rules'
 import { loginAccount } from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { IErrorResponseApi } from 'src/types/utils.type'
@@ -12,7 +12,7 @@ import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button/Button'
 import path from 'src/constants/path'
 
-type IFormData = Omit<Schema, 'confirm_password'>
+type IFormData = Omit<ISchema, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
 const Login = () => {
   const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
