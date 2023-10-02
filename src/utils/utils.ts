@@ -6,6 +6,7 @@ export const isAxiosError = <T>(error: unknown): error is AxiosError<T> => {
   return axios.isAxiosError(error)
 }
 
+//FormError la kieu tra ve cua data
 export const isAxiosUnprocessableEntityError = <FormError>(error: unknown): error is AxiosError<FormError> => {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.UnprocessableEntity
 }

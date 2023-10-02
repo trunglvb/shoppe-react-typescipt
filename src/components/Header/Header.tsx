@@ -24,7 +24,7 @@ const Header = () => {
         <div className='flex justify-end'>
           <Popover
             placement='bottom-end'
-            className='text-[13px]'
+            className='flex text-[13px]'
             renderPopover={
               <div className='relative flex flex-col items-start justify-start rounded-sm border border-gray-200 bg-white py-2 pl-2 pr-28 text-[13px] shadow-md'>
                 <button className='px-3 py-2 hover:text-orange'>Tiếng Việt</button>
