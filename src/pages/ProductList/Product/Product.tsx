@@ -22,7 +22,7 @@ const Product = () => {
                 <span className='text-xs'>₫</span>
                 <span>5.000</span>
               </div>
-              <div className='trung ml-1 text-orange'>
+              <div className='ml-1 text-orange'>
                 <span className='text-xs'>₫</span>
                 <span>2000</span>
               </div>

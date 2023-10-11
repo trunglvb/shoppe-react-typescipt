@@ -14,25 +14,19 @@ interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input = ({
   type,
   errorMessage,
-  placeholder,
   className,
   name,
   rules,
   register,
   autoComplete,
   classNameInput = 'w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm',
-  classNameError = 'mt-1 min-h-[1.25rem] text-sm text-red-600'
+  classNameError = 'mt-1 min-h-[1.25rem] text-sm text-red-600',
+  ...rest
 }: IInputProps) => {
   const registerProps = register && name ? register(name, rules) : {}
   return (
     <div className={className}>
-      <input
-        type={type}
-        className={classNameInput}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        {...registerProps}
-      />
+      <input {...rest} type={type} className={classNameInput} autoComplete={autoComplete} {...registerProps} />
       <div className={classNameError}>{errorMessage}</div>
     </div>
   )
