@@ -11,7 +11,7 @@ const SortProductList = () => {
           <button className='h-8 rounded-sm bg-white px-4 text-center text-sm capitalize text-black hover:bg-slate-100'>
             Bán chạy
           </button>
-          <select className='h-8 rounded px-4 text-left text-sm capitalize outline-none'>
+          <select className='h-8 rounded px-4 text-left text-sm capitalize outline-none' id='ddd'>
             <option value='' disabled className='bg-white text-black'>
               Giá
             </option>

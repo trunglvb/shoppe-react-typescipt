@@ -15,8 +15,7 @@ import path from 'src/constants/path'
 type IFormData = Omit<ISchema, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
 const Login = () => {
-  const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
-  console.log(profile)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const ProductList = () => {
   const queryParams = useQueryParams()
-  const { data: product } = useQuery({
+  const { data: productList } = useQuery({
     //goi lai api khi queryParams thay doi
     queryKey: ['product', queryParams],
     queryFn: () => {
@@ -35,9 +35,9 @@ const ProductList = () => {
           <div className='col-span-9'>
             <SortProductList />
             <div className='grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-              {product?.data.data.products.map(() => (
+              {productList?.data.data.products.map((product) => (
                 <div className='col-span-1' key={uuidv4()}>
-                  <Product />
+                  <Product product={product} />
                 </div>
               ))}
             </div>

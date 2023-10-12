@@ -24,6 +24,7 @@ interface Props {
   as?: ElementType
   initialOpen?: boolean
   placement?: Placement
+  arrowColorSlate?: boolean
 }
 
 export default function Popover({
@@ -32,7 +33,8 @@ export default function Popover({
   renderPopover,
   as: Element = 'div',
   initialOpen,
-  placement = 'bottom-end'
+  placement = 'bottom-end',
+  arrowColorSlate
 }: Props) {
   const [open, setOpen] = useState(initialOpen || false)
   const arrowRef = useRef<HTMLElement>(null)
@@ -72,7 +74,9 @@ export default function Popover({
             >
               <span
                 ref={arrowRef}
-                className='absolute z-10 translate-y-[-95%] border-[11px] border-x-transparent border-b-white border-t-transparent'
+                className={`absolute z-10 translate-y-[-95%] border-x-transparent  border-t-transparent ${
+                  arrowColorSlate ? 'border-[5px] border-b-[#0f172a]' : 'border-[11px] border-b-white '
+                }`}
                 style={{
                   left: data.middlewareData.arrow?.x,
                   top: data.middlewareData.arrow?.y
