@@ -28,6 +28,7 @@ module.exports = {
           paddingRight: '16px'
         }
       })
-    })
+    }),
+    require('flowbite/plugin')
   ]
 }
