@@ -61,7 +61,7 @@ export default function Popover({
             <motion.div
               ref={refs.setFloating}
               style={{
-                transformOrigin: `${data.middlewareData.arrow?.x}px top`,
+                transformOrigin: `${data.middlewareData.arrow?.x}px top`, //phong to thu nhho tai vi tri nay
                 ...floatingStyles
               }}
               {...getFloatingProps()}
