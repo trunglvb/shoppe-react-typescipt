@@ -3,8 +3,8 @@ import LogoHeader from '../LogoHeader'
 import path from 'src/constants/path'
 
 const RegisterHeader = () => {
-  const regiterMatch = useMatch(path.register)
-  const isRegisterRoute = Boolean(regiterMatch)
+  const registerMatch = useMatch(path.register)
+  const isRegisterRoute = Boolean(registerMatch)
 
   return (
     <div className='py-5'>

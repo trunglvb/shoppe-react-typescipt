@@ -58,7 +58,7 @@ const Header = () => {
               <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
             </svg>
           </Popover>
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <Popover
               placement='bottom-end'
               className='text-xs'
@@ -93,8 +93,8 @@ const Header = () => {
                 <div>{profile?.email}</div>
               </div>
             </Popover>
-          )}
-          {!isAuthenticated && (
+          ) : null}
+          {!isAuthenticated ? (
             <div className='flex items-center text-[13px]'>
               <Link to={path.register} className='mx-3 hover:text-white/70'>
                 Đăng Kí
@@ -104,7 +104,7 @@ const Header = () => {
                 Đăng Nhập
               </Link>
             </div>
-          )}
+          ) : null}
         </div>
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
           <div className='col-span-2'>
