@@ -12,8 +12,8 @@ import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button/Button'
 import path from 'src/constants/path'
 
-type IFormData = Omit<ISchema, 'confirm_password'>
-const loginSchema = schema.omit(['confirm_password'])
+type IFormData = Pick<ISchema, 'email' | 'password'>
+const loginSchema = schema.pick(['email', 'password'])
 const Login = () => {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()

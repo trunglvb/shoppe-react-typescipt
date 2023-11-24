@@ -4,7 +4,8 @@ import MainLayout from 'src/layouts/MainLayout'
 import Login from 'src/pages/Login'
 import ProductList from 'src/pages/ProductList'
 import Register from 'src/pages/Register'
-import Profile from 'src/components/Profile'
+import Profile from 'src/pages/Profile'
+import ProductDetail from 'src/pages/ProductDetail'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import path from 'src/constants/path'
@@ -25,6 +26,14 @@ const useRouteElement = () => {
       element: (
         <MainLayout>
           <ProductList />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.productDetail,
+      element: (
+        <MainLayout>
+          <ProductDetail />
         </MainLayout>
       )
     },

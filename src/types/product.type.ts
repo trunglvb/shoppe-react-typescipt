@@ -29,16 +29,21 @@ export type IProductList = {
 }
 
 export type IProductListConfig = {
-  page?: number
-  limit?: number
+  page?: number | string
+  limit?: number | string
   order?: 'desc' | 'asc'
   sort_by?: 'createdAt' | 'view' | 'sold' | 'price'
   category?: string
   exclude?: string
-  rating_filter?: number
-  price_max?: number
-  price_min?: number
+  rating_filter?: number | string
+  price_max?: number | string
+  price_min?: number | string
   name?: string
 }
+
+export type IQueryConfig = {
+  [key in keyof IProductListConfig]: string
+}
+
 export type IProductListResponse = ISuccessResponseApi<IProductList>
 export type IProductDetailsResponse = ISuccessResponseApi<IProduct>

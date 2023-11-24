@@ -13,7 +13,8 @@ import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button/Button'
 import path from 'src/constants/path'
 
-type IFormData = ISchema
+type IFormData = Omit<ISchema, 'price_max' | 'price_min'>
+const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
 const Register = () => {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
@@ -25,15 +26,16 @@ const Register = () => {
     // getValues,
     formState: { errors }
   } = useForm<IFormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(registerSchema)
   })
   //useForm({ mode: 'all' })
 
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<IFormData, 'confirm_password'>) => registerAccount(body)
+    mutationFn: (body: Omit<IFormData, 'confirm_password' | 'price_min' | 'price_max'>) => registerAccount(body)
   })
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data)
     // const value = getValues()
     // console.log(value)
     const body = omit(data, ['confirm_password'])

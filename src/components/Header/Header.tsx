@@ -21,7 +21,7 @@ const Header = () => {
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
-        <div className='flex justify-end'>
+        <div className='flex items-center justify-end'>
           <Popover
             placement='bottom-end'
             className='flex text-[13px]'

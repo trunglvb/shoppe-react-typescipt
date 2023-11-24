@@ -27,15 +27,16 @@ interface Props {
   arrowColorSlate?: boolean
 }
 
-export default function Popover({
-  children,
-  className,
-  renderPopover,
-  as: Element = 'div',
-  initialOpen,
-  placement = 'bottom-end',
-  arrowColorSlate
-}: Props) {
+export default function Popover(props: Props) {
+  const {
+    children,
+    className,
+    renderPopover,
+    as: Element = 'div',
+    initialOpen,
+    placement = 'bottom-end',
+    arrowColorSlate
+  } = props
   const [open, setOpen] = useState(initialOpen || false)
   const arrowRef = useRef<HTMLElement>(null)
   const data = useFloating({
