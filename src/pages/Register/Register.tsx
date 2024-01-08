@@ -35,7 +35,6 @@ const Register = () => {
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
     // const value = getValues()
     // console.log(value)
     const body = omit(data, ['confirm_password'])

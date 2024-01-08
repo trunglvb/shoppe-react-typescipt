@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import AsideFilter from './components/AsideFilter'
 import Product from './components/Product'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import useQueryParams from 'src/hooks/useQueryParams'
 import productApi from 'src/apis/product.api'
 import SortProductList from './components/SortProductList'

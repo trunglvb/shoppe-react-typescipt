@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { IQueryConfig } from 'src/pages/ProductList/ProductList'
+import { IQueryConfig } from 'src/types/product.type'
 import { v4 as uuid } from 'uuid'
 import { Link, createSearchParams } from 'react-router-dom'
 import path from 'src/constants/path'
