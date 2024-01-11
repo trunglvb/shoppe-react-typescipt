@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
@@ -6,33 +7,63 @@ import Rating from 'src/components/Rating/Rating'
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from 'src/utils/utils'
 import { v4 as uuidv4 } from 'uuid'
 import DOMPurify from 'dompurify'
+import { useEffect, useMemo, useState } from 'react'
+import { IProduct } from 'src/types/product.type'
 
 const ProductDetail = () => {
   const { id } = useParams()
-
   const { data: productDetail } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productApi.getProductDetails(id as string)
   })
-
   const product = productDetail?.data?.data
+  const [currenIndexImages, setCurrentIndexImages] = useState([0, 5])
+  const [activeImage, setActiveImage] = useState<string>('')
+
+  const currentImages = useMemo(() => product?.images?.slice(...currenIndexImages), [currenIndexImages, product])
+
+  useEffect(() => {
+    if (product && product?.images.length > 0) {
+      setActiveImage(product.images[0])
+    }
+  }, [product])
+
+  const handleChooseCurrentImage = (image: string) => {
+    setActiveImage(image)
+  }
+
+  const handleNextSlide = () => {
+    if (currenIndexImages[1] < (product as IProduct).images.length) {
+      setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
+    }
+  }
+
+  const handlePrevSlide = () => {
+    if (currenIndexImages[0] > 0) {
+      setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
+    }
+  }
+
   if (!product) return null
 
   return (
     <div className='bg-gray-200 py-6'>
-      <div className='bg-white p-4 shadow-sm'>
-        <div className='container'>
+      <div className='container'>
+        <div className='bg-white p-4 shadow-sm'>
           <div className='grid grid-cols-12'>
             <div className='col-span-4'>
               <div className='relative w-full pt-[100%] shadow'>
                 <img
-                  src={product?.image}
+                  src={activeImage}
                   alt={product?.name}
                   className='absolute left-0 top-0 h-full w-full object-contain'
                 />
               </div>
               <div className='relative mt-4 grid grid-cols-5 gap-1'>
-                <button className='absolute left-0 top-[50%] z-10 h-9 w-5 translate-y-[-50%] bg-black/20  text-white'>
+                <button
+                  className='absolute left-0 top-[50%] z-10 h-9 w-5 translate-y-[-50%] bg-black/20  text-white'
+                  onClick={handlePrevSlide}
+                >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
@@ -44,10 +75,16 @@ const ProductDetail = () => {
                     <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
                   </svg>
                 </button>
-                {product.images.slice(0, 5).map((image, index) => {
-                  const isActive = index === 0
+                {currentImages?.map((image) => {
+                  const isActive = image === activeImage
                   return (
-                    <div className='relative w-full pt-[100%]' key={uuidv4()}>
+                    <div
+                      className='relative w-full pt-[100%]'
+                      key={uuidv4()}
+                      onMouseEnter={() => {
+                        handleChooseCurrentImage(image)
+                      }}
+                    >
                       <img
                         src={image}
                         alt=''
@@ -57,7 +94,10 @@ const ProductDetail = () => {
                     </div>
                   )
                 })}
-                <button className='absolute right-0 top-[50%] z-10 h-9 w-5 translate-y-[-50%] bg-black/20  text-white'>
+                <button
+                  className='absolute right-0 top-[50%] z-10 h-9 w-5 translate-y-[-50%] bg-black/20  text-white'
+                  onClick={handleNextSlide}
+                >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
@@ -163,8 +203,8 @@ const ProductDetail = () => {
         </div>
       </div>
       <div className='mt-8'>
-        <div className='container'>
-          <div className=' bg-white p-4 shadow'>
+        <div className='bg-white p-4 shadow'>
+          <div className='  container'>
             <div className='rounded bg-gray-50 p-4 text-lg capitalize text-slate-700'>Mô tả sản phẩm</div>
             <div className='mx-4 mb-4 mt-12 text-sm leading-loose'>
               <div
