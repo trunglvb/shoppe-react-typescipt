@@ -3,7 +3,6 @@ import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import categoryApis from 'src/apis/category.api'
 import Button from 'src/components/Button/Button'
 import path from 'src/constants/path'
-
 import classNames from 'classnames'
 import InputNumber from 'src/components/InputNumber'
 import { useForm, Controller } from 'react-hook-form'
@@ -13,6 +12,7 @@ import { INoUndefineField } from 'src/types/utils.type'
 import RatingStars from '../RatingStarts/RatingStars'
 import { IQueryConfig } from 'src/types/product.type'
 import { omit } from 'lodash'
+import { v4 as uuidv4 } from 'uuid'
 
 interface ICategoriesProps {
   queryConfig: IQueryConfig
@@ -90,7 +90,7 @@ const AsideFilter = (props: ICategoriesProps) => {
           ? categoriesData?.data.data.map((categoryItem) => {
               const isActive = queryConfig?.category === categoryItem._id
               return (
-                <li className='py-2 pl-2' key={categoryItem?._id}>
+                <li className='py-2 pl-2' key={uuidv4()}>
                   <Link
                     to={{
                       pathname: path.home,

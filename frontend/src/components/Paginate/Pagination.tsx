@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { IQueryConfig } from 'src/types/product.type'
-import { v4 as uuid } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { Link, createSearchParams } from 'react-router-dom'
 import path from 'src/constants/path'
 
@@ -17,13 +17,13 @@ const Pagination = (props: IPaginationProps) => {
     let dotBefore = false
 
     //sau currentPage
-    const onRenderDotAfter = (index: number) => {
+    const onRenderDotAfter = () => {
       //se chi return ... 1 lan khi gap pageNumber thoa man
       if (!dotAfter) {
         console.log('renderCondition')
         dotAfter = true
         return (
-          <span key={index} className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm'>
+          <span key={uuidv4()} className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm'>
             ...
           </span>
         )
@@ -32,11 +32,11 @@ const Pagination = (props: IPaginationProps) => {
     }
 
     //truoc currentPage
-    const onRenderDotBefore = (index: number) => {
+    const onRenderDotBefore = () => {
       if (!dotBefore) {
         dotBefore = true
         return (
-          <span key={index} className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm'>
+          <span key={uuidv4()} className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm'>
             ...
           </span>
         )
@@ -48,15 +48,15 @@ const Pagination = (props: IPaginationProps) => {
       .map((_, index) => {
         const pageNumber = index + 1
         if (page <= RANGE * 2 + 1 && pageNumber > page + RANGE && pageNumber <= pageSize - RANGE) {
-          return onRenderDotAfter(index)
+          return onRenderDotAfter()
         } else if (page > RANGE * 2 + 1 && page < pageSize - RANGE * 2) {
           if (pageNumber < page - RANGE && pageNumber > RANGE) {
-            return onRenderDotBefore(index)
+            return onRenderDotBefore()
           } else if (pageNumber > page + RANGE && pageNumber <= pageSize - RANGE) {
-            return onRenderDotAfter(index)
+            return onRenderDotAfter()
           }
         } else if (pageNumber < page - RANGE && pageNumber > RANGE && page >= pageSize - RANGE * 2) {
-          return onRenderDotBefore(index)
+          return onRenderDotBefore()
         }
         return (
           <Link
@@ -67,7 +67,7 @@ const Pagination = (props: IPaginationProps) => {
                 page: pageNumber.toString()
               }).toString()
             }}
-            key={uuid()}
+            key={uuidv4()}
             className={classNames('mx-2 cursor-pointer rounded border bg-white/60 px-3 py-2 shadow-sm', {
               'border-cyan-500': pageNumber === page,
               'border-transparent': pageNumber !== page

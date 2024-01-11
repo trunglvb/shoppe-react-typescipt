@@ -23,3 +23,7 @@ export const formatNumberToSocialStyle = (value: number) => {
     .format(value)
     .replace('.', ',')
 }
+
+export const rateSale = (original: number, sale: number) => {
+  return Math.round((original - sale) / original) * 100 + '%'
+}

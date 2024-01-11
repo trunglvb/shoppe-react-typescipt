@@ -17,6 +17,7 @@ export type IProduct = {
   image: string
   createdAt: string
   updatedAt: string
+  description: any
 }
 
 export type IProductList = {

@@ -2,13 +2,13 @@ import { useId } from 'react'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import path from 'src/constants/path'
 import { IQueryConfig } from 'src/types/product.type'
+import { v4 as uuidv4 } from 'uuid'
 
 interface IRatingStarsProps {
   queryConfig: IQueryConfig
 }
 
 const RatingStars = ({ queryConfig }: IRatingStarsProps) => {
-  const id = useId()
   const navigate = useNavigate()
 
   const handleFilterStar = (ratingFilter: number) => {
@@ -26,14 +26,14 @@ const RatingStars = ({ queryConfig }: IRatingStarsProps) => {
       {Array(5)
         .fill(0)
         .map((_, index) => (
-          <li className='py-1 pl-2' key={id}>
+          <li className='py-1 pl-2' key={uuidv4()}>
             <button className='flex items-center text-sm' onClick={() => handleFilterStar(5 - index)}>
               {Array(5)
                 .fill(0)
                 .map((_, indexStar) => {
                   if (indexStar < 5 - index) {
                     return (
-                      <svg viewBox='0 0 9.5 8' key={id} className='mr-1 h-4 w-4'>
+                      <svg viewBox='0 0 9.5 8' key={uuidv4()} className='mr-1 h-4 w-4'>
                         <defs>
                           <linearGradient id='ratingStarGradient' x1='50%' x2='50%' y1='0%' y2='100%'>
                             <stop offset='0' stopColor='#ffca11'></stop>
@@ -61,7 +61,7 @@ const RatingStars = ({ queryConfig }: IRatingStarsProps) => {
                     )
                   } else {
                     return (
-                      <svg viewBox='0 0 30 30' className='mr-1 h-4 w-4' key={id}>
+                      <svg viewBox='0 0 30 30' className='mr-1 h-4 w-4' key={uuidv4()}>
                         <defs>
                           <linearGradient id='star__hollow' x1='50%' x2='50%' y1='0%' y2='99.0177926%'>
                             <stop offset='0%' stopColor='#FFD211' />

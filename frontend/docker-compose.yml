@@ -3,6 +3,8 @@ services:
   frontend:
     build:
       context: .
+    # volumes:
+    #   - ./src:/app/src
     container_name: frontend
     ports:
-      - '3000:80'
+      - '80:80'
