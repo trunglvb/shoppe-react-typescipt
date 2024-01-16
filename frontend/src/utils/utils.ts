@@ -27,3 +27,7 @@ export const formatNumberToSocialStyle = (value: number) => {
 export const rateSale = (original: number, sale: number) => {
   return Math.round((original - sale) / original) * 100 + '%'
 }
+
+export const removeSpecialCharacter = (str: string) =>
+  // eslint-disable-next-line no-useless-escape
+  str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, '')

@@ -8,7 +8,6 @@ module.exports = {
   corePlugins: {
     container: false
   },
-  important: true,
   theme: {
     extend: {
       colors: {

@@ -2,13 +2,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
-import InputNumber from 'src/components/InputNumber'
 import Rating from 'src/components/Rating/Rating'
 import { formatCurrency, formatNumberToSocialStyle, rateSale } from 'src/utils/utils'
 import { v4 as uuidv4 } from 'uuid'
 import DOMPurify from 'dompurify'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { IProduct } from 'src/types/product.type'
+import QuantityController from 'src/components/QuantityController/QuantityController'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -17,10 +17,12 @@ const ProductDetail = () => {
     queryFn: () => productApi.getProductDetails(id as string)
   })
   const product = productDetail?.data?.data
-  const [currenIndexImages, setCurrentIndexImages] = useState([0, 5])
+  const imageRef = useRef<HTMLImageElement>(null)
+  const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const [activeImage, setActiveImage] = useState<string>('')
+  const [buyCount, setBuyCount] = useState(1)
 
-  const currentImages = useMemo(() => product?.images?.slice(...currenIndexImages), [currenIndexImages, product])
+  const currentImages = useMemo(() => product?.images?.slice(...currentIndexImages), [currentIndexImages, product])
 
   useEffect(() => {
     if (product && product?.images.length > 0) {
@@ -33,15 +35,37 @@ const ProductDetail = () => {
   }
 
   const handleNextSlide = () => {
-    if (currenIndexImages[1] < (product as IProduct).images.length) {
+    if (currentIndexImages[1] < (product as IProduct).images.length) {
       setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
     }
   }
 
   const handlePrevSlide = () => {
-    if (currenIndexImages[0] > 0) {
+    if (currentIndexImages[0] > 0) {
       setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
     }
+  }
+
+  const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const image = imageRef.current as HTMLImageElement
+    const { naturalHeight, naturalWidth } = image
+    const { offsetX, offsetY } = event.nativeEvent
+    const top = offsetY * (1 - naturalHeight / rect.height)
+    const left = offsetX * (1 - naturalWidth / rect.width)
+    image.style.width = naturalWidth + 'px'
+    image.style.height = naturalHeight + 'px'
+    image.style.maxWidth = 'unset'
+    image.style.top = top + 'px'
+    image.style.left = left + 'px'
+  }
+
+  const handleRemoveZoom = () => {
+    imageRef.current?.removeAttribute('style')
+  }
+
+  const handleBuyCount = (value: number) => {
+    setBuyCount(value)
   }
 
   if (!product) return null
@@ -52,11 +76,16 @@ const ProductDetail = () => {
         <div className='bg-white p-4 shadow-sm'>
           <div className='grid grid-cols-12'>
             <div className='col-span-4'>
-              <div className='relative w-full pt-[100%] shadow'>
+              <div
+                className='relative w-full cursor-zoom-in overflow-hidden pt-[100%] shadow'
+                onMouseMove={handleZoom}
+                onMouseLeave={handleRemoveZoom}
+              >
                 <img
                   src={activeImage}
-                  alt={product?.name}
-                  className='absolute left-0 top-0 h-full w-full object-contain'
+                  alt={product.name}
+                  className='pointer-events-none absolute left-0 top-0 h-full w-full bg-white object-cover'
+                  ref={imageRef}
                 />
               </div>
               <div className='relative mt-4 grid grid-cols-5 gap-1'>
@@ -133,38 +162,13 @@ const ProductDetail = () => {
               </div>
               <div className='mt-8 flex items-center'>
                 <div className='capitalize text-gray-500'>Số lượng</div>
-                <div className='ml-10 flex items-center'>
-                  <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth='1.5'
-                      stroke='currentColor'
-                      className='h-4 w-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M5 12h14' />
-                    </svg>
-                  </button>
-                  <InputNumber
-                    value={1}
-                    className=''
-                    classNameError='hidden'
-                    classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center ouline-none'
-                  />
-                  <button className='flex h-8 w-8 items-center justify-center rounded-r-sm border border-gray-300 text-gray-600'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth='1.5'
-                      stroke='currentColor'
-                      className='h-4 w-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
-                    </svg>
-                  </button>
-                </div>
+                <QuantityController
+                  onDecrease={handleBuyCount}
+                  onIncrease={handleBuyCount}
+                  onType={handleBuyCount}
+                  value={buyCount}
+                  max={product.quantity}
+                />
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center'>
