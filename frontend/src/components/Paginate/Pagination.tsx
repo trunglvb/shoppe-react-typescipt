@@ -20,7 +20,6 @@ const Pagination = (props: IPaginationProps) => {
     const onRenderDotAfter = () => {
       //se chi return ... 1 lan khi gap pageNumber thoa man
       if (!dotAfter) {
-        console.log('renderCondition')
         dotAfter = true
         return (
           <span key={uuidv4()} className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm'>

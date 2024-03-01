@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState, useRef } from 'react'
 import { IProduct } from 'src/types/product.type'
 import QuantityController from 'src/components/QuantityController/QuantityController'
 import purchasesApi from 'src/apis/purchases.api'
-import { IAddToCartParams } from 'src/types/purchases.type'
+import { ICartParams } from 'src/types/purchases.type'
 import { queryClient } from 'src/main'
 import { purchasesStatus } from 'src/constants/purchases'
 import { toast } from 'react-toastify'
@@ -18,7 +18,7 @@ import { toast } from 'react-toastify'
 const ProductDetail = () => {
   const { id } = useParams()
   const { data: productDetail } = useQuery({
-    queryKey: ['product', id],
+    queryKey: ['productDetails', id],
     queryFn: () => productApi.getProductDetails(id as string)
   })
   const product = productDetail?.data?.data
@@ -74,7 +74,7 @@ const ProductDetail = () => {
   }
 
   const addToCartMutation = useMutation({
-    mutationFn: (body: IAddToCartParams) => purchasesApi.addToCart(body),
+    mutationFn: (body: ICartParams) => purchasesApi.addToCart(body),
     onSuccess: () => {
       toast.success('Thêm sản phẩm vào giỏ hàng thành công', { autoClose: 2000 })
       queryClient.invalidateQueries({

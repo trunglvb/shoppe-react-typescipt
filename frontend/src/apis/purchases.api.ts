@@ -1,15 +1,32 @@
-import { IAddToCardResponse, IAddToCartParams, IPurchaseListStatus, IPurchasesList } from './../types/purchases.type'
+import {
+  IPurchaseResponse,
+  ICartParams,
+  IPurchaseListStatus,
+  IPurchasesList,
+  IBuyProductResponse
+} from './../types/purchases.type'
 import http from 'src/utils/http'
 
 const URL = 'purchases'
 
 const purchasesApi = {
-  addToCart: (body: IAddToCartParams) => {
-    return http.post<IAddToCardResponse>(`${URL}/add-to-cart`, body)
+  addToCart: (body: ICartParams) => {
+    return http.post<IPurchaseResponse>(`${URL}/add-to-cart`, body)
   },
   getPurchasesList: (params: { status: IPurchaseListStatus }) => {
     return http.get<IPurchasesList>(`${URL}`, {
       params: params
+    })
+  },
+  buyProduct: (body: ICartParams[]) => {
+    return http.post<IBuyProductResponse>(`${URL}/buy-products`, body)
+  },
+  updatePurchase: (body: ICartParams) => {
+    return http.put<IPurchaseResponse>(`${URL}/update-purchase`, body)
+  },
+  deletePurchases: (body: string[]) => {
+    return http.delete(`${URL}/purchases`, {
+      data: body
     })
   }
 }

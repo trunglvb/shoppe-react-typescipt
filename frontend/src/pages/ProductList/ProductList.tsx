@@ -14,7 +14,7 @@ const ProductList = () => {
   const queryConfig = useQueryConfig()
   const { data: productList } = useQuery({
     //goi lai api khi queryParams thay doi
-    queryKey: ['product', queryConfig],
+    queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as IProductListConfig)
     },

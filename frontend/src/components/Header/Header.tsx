@@ -17,8 +17,9 @@ import purchasesApi from 'src/apis/purchases.api'
 import { purchasesStatus } from 'src/constants/purchases'
 import { v4 as uuidv4 } from 'uuid'
 import { IPurchase } from 'src/types/purchases.type'
-import noproduct from '../../assets/images/no-product.png'
+import noproduct from 'src/assets/images/no-product.png'
 import { formatCurrency } from 'src/utils/utils'
+import { queryClient } from 'src/main'
 
 type IFormData = Pick<ISchema, 'name'>
 const nameSchema = schema.pick(['name'])
@@ -37,7 +38,8 @@ const Header = () => {
   // => query nay khong bi inactive => khong bi goi lai
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['product', { status: purchasesStatus.inCart }],
-    queryFn: () => purchasesApi.getPurchasesList({ status: purchasesStatus.inCart })
+    queryFn: () => purchasesApi.getPurchasesList({ status: purchasesStatus.inCart }),
+    enabled: isAuthenticated
   })
 
   const logoutMutation = useMutation({
@@ -45,6 +47,7 @@ const Header = () => {
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
+      queryClient.removeQueries({ queryKey: ['product', { status: purchasesStatus.inCart }] })
     }
   })
 
@@ -211,16 +214,19 @@ const Header = () => {
                         ? purchasesInCart.length - max_product_in_cart
                         : ''
                     } Thêm vào giỏ hàng`}</div>
-                    <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:opacity-80'>
+                    <Link
+                      to={path.cart}
+                      className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:opacity-80'
+                    >
                       Xem giỏ hàng
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
             }
           >
             <div className='col-span-1 flex items-center justify-center text-xl'>
-              <Link to='/' className='relative'>
+              <div className='relative'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
@@ -235,12 +241,12 @@ const Header = () => {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
-                {purchasesInCart && purchasesInCart.length > 0 && (
+                {isAuthenticated && purchasesInCart && purchasesInCart.length > 0 && (
                   <span className='absolute left-[17px] top-[-5px] rounded-full bg-white px-[9px] py-[1px] text-xs text-orange '>
                     {purchasesInCart?.length}
                   </span>
                 )}
-              </Link>
+              </div>
             </div>
           </Popover>
         </div>
