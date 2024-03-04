@@ -3,17 +3,54 @@ import { Button } from 'flowbite-react'
 import purchasesApi from 'src/apis/purchases.api'
 import { purchasesStatus } from 'src/constants/purchases'
 import { formatCurrency } from 'src/utils/utils'
-import noproduct from 'src/assets/images/no-product.png'
 import { Link } from 'react-router-dom'
-import path from 'src/constants/path'
 import QuantityController from 'src/components/QuantityController/QuantityController'
+import { IPurchase } from 'src/types/purchases.type'
+import { produce } from 'immer'
+import { useEffect, useState } from 'react'
+
+interface IExtendedPurchases extends IPurchase {
+  disable: boolean
+  checked: boolean
+}
 
 const Cart = () => {
+  const [extendedPurchases, setExtendedPurchases] = useState<IExtendedPurchases[]>([])
+
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['product', { status: purchasesStatus.inCart }],
     queryFn: () => purchasesApi.getPurchasesList({ status: purchasesStatus.inCart })
   })
   const purchasesInCart = purchasesInCartData?.data?.data
+  const isChecKAll = extendedPurchases?.every((purchase) => purchase.checked)
+
+  useEffect(() => {
+    const extendedPurchasesData =
+      purchasesInCart?.map((purchase) => ({
+        ...purchase,
+        disable: false,
+        checked: false
+      })) ?? []
+    setExtendedPurchases(extendedPurchasesData)
+  }, [purchasesInCart])
+
+  const handleCheck = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setExtendedPurchases(
+      produce((draft) => {
+        draft[index].checked = e.target.checked
+      })
+    )
+  }
+
+  const handleCheckAll = () => {
+    setExtendedPurchases((prev) =>
+      prev.map((purchase) => ({
+        ...purchase,
+        checked: !isChecKAll
+      }))
+    )
+  }
+
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container overflow-auto '>
@@ -22,7 +59,12 @@ const Cart = () => {
             <div className='col-span-6'>
               <div className='flex items-center'>
                 <div className='flex flex-shrink-0 items-center justify-center pr-3'>
-                  <input type='checkbox' className='h-5 w-5 text-orange accent-orange outline-none focus:ring-0' />
+                  <input
+                    type='checkbox'
+                    className='h-5 w-5 text-orange accent-orange outline-none focus:ring-0'
+                    onChange={handleCheckAll}
+                    checked={isChecKAll}
+                  />
                 </div>
                 <div className='flex-grow text-black'>Sản phẩm</div>
               </div>
@@ -37,7 +79,7 @@ const Cart = () => {
             </div>
           </div>
           <div className='my-3 rounded-sm bg-white p-5 shadow'>
-            {purchasesInCart?.map((item) => (
+            {extendedPurchases?.map((item, index) => (
               <div
                 key={item._id}
                 className='mt-4 grid grid-cols-12 rounded-sm border border-gray-200 bg-white px-4 py-5 text-center text-sm text-gray-500 first:mt-0'
@@ -45,7 +87,12 @@ const Cart = () => {
                 <div className='col-span-6'>
                   <div className='flex'>
                     <div className='flex flex-shrink-0 items-center justify-center pr-3'>
-                      <input type='checkbox' className='h-5 w-5 text-orange accent-orange outline-none focus:ring-0' />
+                      <input
+                        type='checkbox'
+                        className='h-5 w-5 text-orange accent-orange outline-none focus:ring-0'
+                        onChange={handleCheck(index)}
+                        checked={item.checked}
+                      />
                     </div>
                     <div className='flex-grow'>
                       <div className='flex'>
@@ -92,10 +139,15 @@ const Cart = () => {
         </div>
       </div>
       {/* sticky khi scroll */}
-      <div className='sticky bottom-0 z-10 flex flex-col rounded-sm border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center'>
+      <div className='sticky bottom-0 z-10 ml-auto mr-auto flex max-w-[1127px] flex-col rounded-sm border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center'>
         <div className='flex items-center'>
           <div className='flex flex-shrink-0 items-center justify-center pr-3'>
-            <input type='checkbox' className='h-5 w-5 text-orange accent-orange outline-none focus:ring-0' />
+            <input
+              type='checkbox'
+              className='h-5 w-5 text-orange accent-orange outline-none focus:ring-0'
+              onChange={handleCheckAll}
+              checked={isChecKAll}
+            />
             <button className='mx-3 border-none bg-none'>{`Chọn tất cả (${purchasesInCart?.length})`}</button>
             <button className='mx-3 border-none bg-none'>Xoá</button>
           </div>
