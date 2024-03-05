@@ -1,13 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button } from 'flowbite-react'
 import purchasesApi from 'src/apis/purchases.api'
 import { purchasesStatus } from 'src/constants/purchases'
 import { formatCurrency } from 'src/utils/utils'
 import { Link } from 'react-router-dom'
 import QuantityController from 'src/components/QuantityController/QuantityController'
-import { IPurchase } from 'src/types/purchases.type'
+import { ICartParams, IPurchase } from 'src/types/purchases.type'
 import { produce } from 'immer'
-import { useEffect, useState } from 'react'
+import { queryClient } from 'src/main'
+import { keyBy } from 'lodash'
 
 interface IExtendedPurchases extends IPurchase {
   disable: boolean
@@ -16,8 +18,7 @@ interface IExtendedPurchases extends IPurchase {
 
 const Cart = () => {
   const [extendedPurchases, setExtendedPurchases] = useState<IExtendedPurchases[]>([])
-
-  const { data: purchasesInCartData } = useQuery({
+  const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['product', { status: purchasesStatus.inCart }],
     queryFn: () => purchasesApi.getPurchasesList({ status: purchasesStatus.inCart })
   })
@@ -25,19 +26,29 @@ const Cart = () => {
   const isChecKAll = extendedPurchases?.every((purchase) => purchase.checked)
 
   useEffect(() => {
-    const extendedPurchasesData =
-      purchasesInCart?.map((purchase) => ({
-        ...purchase,
-        disable: false,
-        checked: false
-      })) ?? []
-    setExtendedPurchases(extendedPurchasesData)
+    setExtendedPurchases((prev) => {
+      const extendedPurchasesObject = keyBy(prev, '_id')
+      return (
+        purchasesInCart?.map((purchase) => ({
+          ...purchase,
+          disable: false,
+          checked: Boolean(extendedPurchasesObject[purchase._id]?.checked)
+        })) ?? []
+      )
+    })
   }, [purchasesInCart])
 
-  const handleCheck = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updatePurchaseMutation = useMutation({
+    mutationFn: (body: ICartParams) => purchasesApi.updatePurchase(body),
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const handleCheck = (purchasesIndex: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setExtendedPurchases(
       produce((draft) => {
-        draft[index].checked = e.target.checked
+        draft[purchasesIndex].checked = e.target.checked
       })
     )
   }
@@ -51,9 +62,33 @@ const Cart = () => {
     )
   }
 
+  const handleQuantity = (purchasesIndex: number, value: number, enabled: boolean) => {
+    if (enabled) {
+      const purchase = extendedPurchases[purchasesIndex]
+      const body = {
+        product_id: purchase.product._id,
+        buy_count: value
+      }
+      setExtendedPurchases(
+        produce((draft) => {
+          draft[purchasesIndex].disable = true
+        })
+      )
+      updatePurchaseMutation.mutate(body)
+    }
+  }
+
+  const handleTypeQuantity = (purchasesIndex: number, value: number) => {
+    setExtendedPurchases(
+      produce((draft) => {
+        draft[purchasesIndex].buy_count = value
+      })
+    )
+  }
+
   return (
     <div className='bg-neutral-100 py-16'>
-      <div className='container overflow-auto '>
+      <div className='container overflow-auto pl-0 pr-0'>
         <div className='min-w-[1000px]'>
           <div className='grid grid-cols-12 rounded-sm bg-white px-9 py-5 text-sm capitalize text-gray-500 shadow'>
             <div className='col-span-6'>
@@ -123,6 +158,19 @@ const Cart = () => {
                         max={item.product.quantity}
                         value={item.buy_count}
                         classNameWrapper='fllex items-center'
+                        onIncrease={(value) => handleQuantity(index, value, value <= item.product.quantity)}
+                        onDecrease={(value) => handleQuantity(index, value, value >= 1)}
+                        onType={(value) => handleTypeQuantity(index, value)}
+                        onFocusOut={(value) =>
+                          handleQuantity(
+                            index,
+                            value,
+                            value >= 1 &&
+                              value <= item.product.quantity &&
+                              value !== (purchasesInCart as IPurchase[])[index].buy_count
+                          )
+                        }
+                        disabled={item.disable}
                       />
                     </div>
                     <div className='col-span-1'>
@@ -139,7 +187,7 @@ const Cart = () => {
         </div>
       </div>
       {/* sticky khi scroll */}
-      <div className='sticky bottom-0 z-10 ml-auto mr-auto flex max-w-[1127px] flex-col rounded-sm border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center'>
+      <div className='sticky bottom-0 z-10 ml-auto mr-auto flex min-w-[1000px] max-w-[80rem] flex-col rounded-sm border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center'>
         <div className='flex items-center'>
           <div className='flex flex-shrink-0 items-center justify-center pr-3'>
             <input
@@ -156,12 +204,12 @@ const Cart = () => {
         <div className='mt-5 flex flex-col sm:ml-auto sm:mt-0 sm:flex-row sm:items-center'>
           <div>
             <div className='flex items-center sm:justify-end'>
-              <div>Tổng thanh toán sản phẩm:</div>
-              <div className='ml-2 text-2xl text-orange'>₫{}</div>
+              {/* <div>Tổng thanh toán ({checkedPurchasesCount} sản phẩm):</div>
+              <div className='ml-2 text-2xl text-orange'>₫{formatCurrency(totalCheckedPurchasePrice)}</div> */}
             </div>
             <div className='flex items-center text-sm sm:justify-end'>
               <div className='text-gray-500'>Tiết kiệm</div>
-              <div className='ml-6 text-orange'>₫</div>
+              {/* <div className='ml-6 text-orange'>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</div> */}
             </div>
           </div>
           <Button
