@@ -3,7 +3,8 @@ import {
   ICartParams,
   IPurchaseListStatus,
   IPurchasesList,
-  IBuyProductResponse
+  IBuyProductResponse,
+  IProductDeleteResponse
 } from './../types/purchases.type'
 import http from 'src/utils/http'
 
@@ -25,7 +26,7 @@ const purchasesApi = {
     return http.put<IPurchaseResponse>(`${URL}/update-purchase`, body)
   },
   deletePurchases: (body: string[]) => {
-    return http.delete(`${URL}/purchases`, {
+    return http.delete<IProductDeleteResponse>(`${URL}`, {
       data: body
     })
   }

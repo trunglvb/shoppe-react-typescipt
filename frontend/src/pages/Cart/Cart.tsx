@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import QuantityController from 'src/components/QuantityController/QuantityController'
 import { ICartParams, IPurchase } from 'src/types/purchases.type'
 import { produce } from 'immer'
-import { queryClient } from 'src/main'
+import { toast } from 'react-toastify'
 import { keyBy } from 'lodash'
 
 interface IExtendedPurchases extends IPurchase {
@@ -24,6 +24,15 @@ const Cart = () => {
   })
   const purchasesInCart = purchasesInCartData?.data?.data
   const isChecKAll = extendedPurchases?.every((purchase) => purchase.checked)
+  const checkedPurchases = extendedPurchases?.filter((purchases) => purchases.checked)
+  const totalCheckedPurchasePrice = extendedPurchases?.reduce(
+    (acc, current) => acc + current.product.price * current.buy_count,
+    0
+  )
+  const totalCheckedPurchaseSavingPrice = extendedPurchases?.reduce(
+    (acc, current) => acc + (current.product.price_before_discount - current.product.price) * current.buy_count,
+    0
+  )
 
   useEffect(() => {
     setExtendedPurchases((prev) => {
@@ -40,6 +49,21 @@ const Cart = () => {
 
   const updatePurchaseMutation = useMutation({
     mutationFn: (body: ICartParams) => purchasesApi.updatePurchase(body),
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const buyProductsMutation = useMutation({
+    mutationFn: (body: ICartParams[]) => purchasesApi.buyProduct(body),
+    onSuccess: (data) => {
+      refetch()
+      toast.success(data.data.message)
+    }
+  })
+
+  const deletePurchasesMutation = useMutation({
+    mutationFn: (body: string[]) => purchasesApi.deletePurchases(body),
     onSuccess: () => {
       refetch()
     }
@@ -86,6 +110,25 @@ const Cart = () => {
     )
   }
 
+  const handleDeletePurchases = (purchasesIndex: number) => () => {
+    const purchasesId = extendedPurchases[purchasesIndex]._id
+    deletePurchasesMutation.mutate([purchasesId])
+  }
+
+  const handleDeleteMultiplePurchases = () => {
+    const purchasesIds = checkedPurchases?.map((purchases) => purchases._id)
+    console.log(purchasesIds)
+    deletePurchasesMutation.mutate(purchasesIds)
+  }
+
+  const handleBuyProducts = () => {
+    const body = checkedPurchases?.map((purchases) => ({
+      product_id: purchases._id,
+      buy_count: purchases.buy_count
+    }))
+    buyProductsMutation.mutate(body)
+  }
+
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container overflow-auto pl-0 pr-0'>
@@ -117,7 +160,7 @@ const Cart = () => {
             {extendedPurchases?.map((item, index) => (
               <div
                 key={item._id}
-                className='mt-4 grid grid-cols-12 rounded-sm border border-gray-200 bg-white px-4 py-5 text-center text-sm text-gray-500 first:mt-0'
+                className='mt-4 grid grid-cols-12 items-center rounded-sm border border-gray-200 bg-white px-4 py-5 text-center text-sm text-gray-500 first:mt-0'
               >
                 <div className='col-span-6'>
                   <div className='flex'>
@@ -177,7 +220,12 @@ const Cart = () => {
                       <span className='text-orange'>{formatCurrency(item.product.price * item.buy_count)}</span>
                     </div>
                     <div className='col-span-1'>
-                      <button className='bg-none text-black transition-colors hover:text-orange '>Xoá</button>
+                      <button
+                        onClick={handleDeletePurchases(index)}
+                        className='bg-none text-black transition-colors hover:text-orange '
+                      >
+                        Xoá
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -196,26 +244,28 @@ const Cart = () => {
               onChange={handleCheckAll}
               checked={isChecKAll}
             />
-            <button className='mx-3 border-none bg-none'>{`Chọn tất cả (${purchasesInCart?.length})`}</button>
-            <button className='mx-3 border-none bg-none'>Xoá</button>
+            <div className='mx-3 border-none bg-none'>{`Chọn tất cả (${purchasesInCart?.length})`}</div>
+            <button className='mx-3 border-none bg-none' onClick={handleDeleteMultiplePurchases}>
+              Xoá
+            </button>
           </div>
         </div>
 
         <div className='mt-5 flex flex-col sm:ml-auto sm:mt-0 sm:flex-row sm:items-center'>
           <div>
             <div className='flex items-center sm:justify-end'>
-              {/* <div>Tổng thanh toán ({checkedPurchasesCount} sản phẩm):</div>
-              <div className='ml-2 text-2xl text-orange'>₫{formatCurrency(totalCheckedPurchasePrice)}</div> */}
+              <div>Tổng thanh toán ({checkedPurchases?.length} sản phẩm):</div>
+              <div className='ml-2 text-2xl text-orange'>₫{formatCurrency(totalCheckedPurchasePrice)}</div>
             </div>
             <div className='flex items-center text-sm sm:justify-end'>
               <div className='text-gray-500'>Tiết kiệm</div>
-              {/* <div className='ml-6 text-orange'>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</div> */}
+              <div className='ml-6 text-orange'>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</div>
             </div>
           </div>
           <Button
             className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'
-            // onClick={handleBuyPurchases}
-            // disabled={buyProductsMutation.isLoading}
+            onClick={handleBuyProducts}
+            disabled={buyProductsMutation.isLoading}
           >
             Mua hàng
           </Button>
