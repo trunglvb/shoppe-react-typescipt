@@ -178,7 +178,7 @@ const Cart = () => {
                           <img src={item.product.image} alt={item.product.image} />
                         </Link>
                         <div className='flex-grow px-2 pb-2 pt-1'>
-                          <Link to={`/${item.product._id}`} className='line-clamp-2'>
+                          <Link to={`/${item.product._id}`} className='line-clamp-2 text-left'>
                             {item.product.name}
                           </Link>
                         </div>
