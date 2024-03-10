@@ -27,7 +27,7 @@ export type IPurchasesList = ISuccessResponseApi<IPurchase[]>
 export type IBuyProductResponse = ISuccessResponseApi<IPurchase[]>
 export type IProductDeleteResponse = ISuccessResponseApi<{ deleted_count: number }>
 
-export interface ExtendedPurchase extends IPurchase {
-  disabled: boolean
+export interface IExtendedPurchases extends IPurchase {
+  disable: boolean
   checked: boolean
 }
