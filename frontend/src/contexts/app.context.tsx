@@ -13,6 +13,7 @@ interface IAppContexts {
   setProfile: React.Dispatch<React.SetStateAction<IUser | null>>
   extendedPurchases: IExtendedPurchases[]
   setExtendedPurchases: React.Dispatch<React.SetStateAction<IExtendedPurchases[]>>
+  reset: () => void
 }
 
 const initialContext: IAppContexts = {
@@ -21,7 +22,8 @@ const initialContext: IAppContexts = {
   profile: getProfileFromLocalStorage(),
   setProfile: () => null,
   extendedPurchases: [],
-  setExtendedPurchases: () => null
+  setExtendedPurchases: () => null,
+  reset: () => null
 }
 
 export const AppContext = createContext<IAppContexts>(initialContext)
@@ -31,6 +33,12 @@ export const AppProvider = (props: IAppContextsProps) => {
   const [profile, setProfile] = useState<IUser | null>(initialContext.profile)
   const [extendedPurchases, setExtendedPurchases] = useState<IExtendedPurchases[]>([])
 
+  const reset = () => {
+    setIsAuthenticated(false)
+    setProfile(null)
+    setExtendedPurchases([])
+  }
+
   const contextValue = useMemo(
     () => ({
       isAuthenticated,
@@ -38,7 +46,8 @@ export const AppProvider = (props: IAppContextsProps) => {
       setIsAuthenticated,
       setProfile,
       extendedPurchases,
-      setExtendedPurchases
+      setExtendedPurchases,
+      reset
     }),
     [isAuthenticated, setIsAuthenticated, profile, setProfile, setExtendedPurchases, extendedPurchases]
   )

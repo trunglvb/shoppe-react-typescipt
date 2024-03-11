@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import Rating from 'src/components/Rating/Rating'
@@ -11,7 +11,6 @@ import { IProduct } from 'src/types/product.type'
 import QuantityController from 'src/components/QuantityController/QuantityController'
 import purchasesApi from 'src/apis/purchases.api'
 import { ICartParams } from 'src/types/purchases.type'
-import { queryClient } from 'src/main'
 import { purchasesStatus } from 'src/constants/purchases'
 import { toast } from 'react-toastify'
 import path from 'src/constants/path'
@@ -19,6 +18,7 @@ import path from 'src/constants/path'
 const ProductDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: productDetail } = useQuery({
     queryKey: ['productDetails', id],
     queryFn: () => productApi.getProductDetails(id as string)

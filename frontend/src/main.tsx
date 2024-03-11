@@ -7,10 +7,11 @@ import './index.css'
 import { AppProvider } from './contexts/app.context'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      retry: false
     }
   }
 })
