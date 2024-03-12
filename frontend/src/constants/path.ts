@@ -2,7 +2,10 @@ const path = {
   home: '/',
   login: '/login',
   register: '/register',
-  profile: '/profile',
+  user: '/user',
+  profile: '/user/profile',
+  changePassword: '/user/changePassword',
+  historyPurchase: '/user/historyPurchase',
   logout: '/logout',
   productDetail: '/:id',
   cart: '/cart'
