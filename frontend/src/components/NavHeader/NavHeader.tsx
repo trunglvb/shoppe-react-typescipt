@@ -90,7 +90,7 @@ export default function NavHeader() {
             <div className='mr-2 h-4 w-4 flex-shrink-0'>
               <img
                 className='h-full w-full rounded-full object-cover'
-                src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
+                src={profile?.avatar || 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'}
                 alt='avatar'
               />
             </div>

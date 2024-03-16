@@ -11,16 +11,8 @@ interface Props extends InputNumberProps {
   classNameWrapper?: string
 }
 
-export default function QuantityController({
-  max,
-  onIncrease,
-  onDecrease,
-  onType,
-  onFocusOut,
-  classNameWrapper = 'ml-10',
-  value,
-  ...rest
-}: Props) {
+export default function QuantityController(props: Props) {
+  const { max, onIncrease, onDecrease, onType, onFocusOut, classNameWrapper = 'ml-10', value, ...rest } = props
   const [localValue, setLocalValue] = useState<number>(Number(value || 0))
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

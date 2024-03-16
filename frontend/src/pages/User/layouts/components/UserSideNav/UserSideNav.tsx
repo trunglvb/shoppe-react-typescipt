@@ -1,14 +1,17 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
+import { AppContext } from 'src/contexts/app.context'
 
 const UserSideNav = () => {
+  const { profile } = useContext(AppContext)
   return (
     <>
       <div className='flex items-center border-b border-b-gray-200 py-4'>
         <Link to={path.profile} className='h-10 w-10 flex-shrink-0 overflow-hidden rounded-full'>
           <img
             className='h-full w-full rounded-full object-cover'
-            src='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
+            src={profile?.avatar || 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'}
             alt='avatar'
           />
         </Link>
