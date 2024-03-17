@@ -6,6 +6,7 @@ import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchases'
 import { AppContext } from 'src/contexts/app.context'
 import Popover from '../Popover'
+import { getAvatarUrl } from 'src/utils/utils'
 
 export default function NavHeader() {
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
@@ -90,7 +91,7 @@ export default function NavHeader() {
             <div className='mr-2 h-4 w-4 flex-shrink-0'>
               <img
                 className='h-full w-full rounded-full object-cover'
-                src={profile?.avatar || 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'}
+                src={getAvatarUrl(profile?.avatar)}
                 alt='avatar'
               />
             </div>

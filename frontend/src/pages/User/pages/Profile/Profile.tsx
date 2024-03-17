@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import userApi, { IBodyUpdateProfile } from 'src/apis/user.api'
+import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'
@@ -11,11 +11,20 @@ import DateSelect from '../../layouts/components/DateSelect'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/contexts/app.context'
 import { saveProfileToLocalStorage } from 'src/utils/auth'
+import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { IErrorResponseApi } from 'src/types/utils.type'
 
+// can convert type formError cua avatar sang string vi error se co dang giong nhu data api tra ve
 type IFormData = Pick<IUserSchema, 'name' | 'phone' | 'address' | 'date_of_birth' | 'avatar'>
+type IFormDataError = Omit<IFormData, 'date_of_birth'> & {
+  date_of_birth: string
+}
+
 const registerSchema = userSchema.pick(['name', 'phone', 'address', 'date_of_birth', 'avatar'])
 const Profile = () => {
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const { setProfile } = useContext(AppContext)
+  const [file, setFile] = useState<File>()
   const {
     register,
     handleSubmit,
@@ -34,10 +43,12 @@ const Profile = () => {
     },
     resolver: yupResolver(registerSchema)
   })
+
   const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
     queryFn: userApi.getProfile
   })
+
   const profile = profileData?.data.data
 
   useEffect(() => {
@@ -54,16 +65,57 @@ const Profile = () => {
     mutationFn: userApi.updateProfile
   })
 
-  const onSubmit = handleSubmit(async (data) => {
-    const res = await updateProfileMutation.mutateAsync({
-      ...data,
-      date_of_birth: data?.date_of_birth?.toISOString()
-    })
-    setProfile(res.data.data)
-    saveProfileToLocalStorage(res.data.data)
-    refetch()
-    toast.success(res.data.message)
+  const updloadImageMutation = useMutation({
+    mutationFn: userApi.uploadAvatar
   })
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      let imageURL = avatar
+      if (file) {
+        const formData = new FormData()
+        formData.append('image', file)
+        const uploadImageResponse = await updloadImageMutation.mutateAsync(formData)
+        imageURL = uploadImageResponse?.data.data
+        setValue('avatar', imageURL)
+      }
+      const res = await updateProfileMutation.mutateAsync({
+        ...data,
+        date_of_birth: data?.date_of_birth?.toISOString(),
+        avatar: imageURL
+      })
+      setProfile(res.data.data)
+      saveProfileToLocalStorage(res.data.data)
+      refetch()
+      toast.success(res.data.message)
+    } catch (error) {
+      if (isAxiosUnprocessableEntityError<IErrorResponseApi<IFormDataError>>(error)) {
+        const formError = error.response?.data.data
+        console.log(formError)
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof IFormDataError, {
+              message: formError[key as keyof IFormDataError],
+              type: 'Server'
+            })
+          })
+        }
+      }
+    }
+  })
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileUpload = event.target.files?.[0]
+    setFile(fileUpload)
+  }
+
+  const handleUploadImage = () => {
+    fileInputRef?.current?.click()
+  }
+
+  const previewImage = file ? URL.createObjectURL(file) : ''
+  console.log('previewImage', previewImage)
+  const avatar = watch('avatar')
 
   return (
     <>
@@ -159,14 +211,21 @@ const Profile = () => {
             <div className='my-5 h-24 w-24'>
               <img
                 className='h-full w-full rounded-full object-cover'
-                src={profile?.avatar || 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'}
+                src={previewImage || getAvatarUrl(avatar)}
                 alt='avatar'
               />
             </div>
-            <input type='file' className='hidden' accept='.jpg, .jpeg, .png' />
+            <input
+              type='file'
+              className='hidden'
+              accept='.jpg, .jpeg, .png'
+              ref={fileInputRef}
+              onChange={onFileChange}
+            />
             <button
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm hover:bg-gray-200'
               type='button'
+              onClick={handleUploadImage}
             >
               Chọn ảnh
             </button>

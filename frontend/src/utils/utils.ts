@@ -1,5 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
+import config from './config'
+import userImage from 'src/assets/images/userImage.png'
 
 export const isAxiosError = <T>(error: unknown): error is AxiosError<T> => {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -31,3 +33,7 @@ export const rateSale = (original: number, sale: number) => {
 export const removeSpecialCharacter = (str: string) =>
   // eslint-disable-next-line no-useless-escape
   str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, '')
+
+export const getAvatarUrl = (avatarName?: string) => {
+  return avatarName ? `${config.baseURL}images/${avatarName}` : userImage
+}
