@@ -13,17 +13,16 @@ import { AppContext } from 'src/contexts/app.context'
 import { saveProfileToLocalStorage } from 'src/utils/auth'
 import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { IErrorResponseApi } from 'src/types/utils.type'
+import InputFile from 'src/components/InputFile'
 
 // can convert type formError cua avatar sang string vi error se co dang giong nhu data api tra ve
 type IFormData = Pick<IUserSchema, 'name' | 'phone' | 'address' | 'date_of_birth' | 'avatar'>
 type IFormDataError = Omit<IFormData, 'date_of_birth'> & {
   date_of_birth: string
 }
-const maxSizeUpload = 1048576
 
 const registerSchema = userSchema.pick(['name', 'phone', 'address', 'date_of_birth', 'avatar'])
 const Profile = () => {
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const { setProfile } = useContext(AppContext)
   const [file, setFile] = useState<File>()
   const {
@@ -105,20 +104,7 @@ const Profile = () => {
     }
   })
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileUpload = event.target.files?.[0]
-    if (fileUpload && (fileUpload.size >= maxSizeUpload || !fileUpload.type.includes('image'))) {
-      toast.error('Lỗi file không đúng rule quy định')
-    }
-    setFile(fileUpload)
-  }
-
-  const handleUploadImage = () => {
-    fileInputRef?.current?.click()
-  }
-
   const previewImage = file ? URL.createObjectURL(file) : ''
-  console.log('previewImage', previewImage)
   const avatar = watch('avatar')
 
   return (
@@ -219,28 +205,7 @@ const Profile = () => {
                 alt='avatar'
               />
             </div>
-            <input
-              type='file'
-              className='hidden'
-              accept='.jpg, .jpeg, .png'
-              ref={fileInputRef}
-              onChange={onFileChange}
-              onClick={(event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                ;(event.target as any).value = null
-              }}
-            />
-            <button
-              className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm hover:bg-gray-200'
-              type='button'
-              onClick={handleUploadImage}
-            >
-              Chọn ảnh
-            </button>
-            <div className='mt-3 text-gray-400'>
-              <div>Dụng lượng file tối đa 1 MB.</div>
-              <div>Định dạng:.JPEG, .PNG</div>
-            </div>
+            <InputFile onChange={(file) => setFile(file)} />
           </div>
         </div>
       </form>
