@@ -9,6 +9,7 @@ import Popover from '../Popover'
 import { getAvatarUrl } from 'src/utils/utils'
 
 export default function NavHeader() {
+  console.log('import.meta.env.BASE_URL', import.meta.env.VITE_API_KEY)
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
   const queryClient = useQueryClient()
 
