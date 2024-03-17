@@ -19,6 +19,7 @@ type IFormData = Pick<IUserSchema, 'name' | 'phone' | 'address' | 'date_of_birth
 type IFormDataError = Omit<IFormData, 'date_of_birth'> & {
   date_of_birth: string
 }
+const maxSizeUpload = 1048576
 
 const registerSchema = userSchema.pick(['name', 'phone', 'address', 'date_of_birth', 'avatar'])
 const Profile = () => {
@@ -106,6 +107,9 @@ const Profile = () => {
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileUpload = event.target.files?.[0]
+    if (fileUpload && (fileUpload.size >= maxSizeUpload || !fileUpload.type.includes('image'))) {
+      toast.error('Lỗi file không đúng rule quy định')
+    }
     setFile(fileUpload)
   }
 
@@ -221,6 +225,10 @@ const Profile = () => {
               accept='.jpg, .jpeg, .png'
               ref={fileInputRef}
               onChange={onFileChange}
+              onClick={(event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ;(event.target as any).value = null
+              }}
             />
             <button
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm hover:bg-gray-200'
