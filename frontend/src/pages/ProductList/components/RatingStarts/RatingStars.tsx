@@ -1,4 +1,3 @@
-import { useId } from 'react'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import path from 'src/constants/path'
 import { IQueryConfig } from 'src/types/product.type'

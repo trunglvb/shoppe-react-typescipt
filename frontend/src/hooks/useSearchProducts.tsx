@@ -1,4 +1,3 @@
-import React from 'react'
 import useQueryConfig from './useQueryConfig'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'

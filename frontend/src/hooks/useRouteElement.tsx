@@ -14,6 +14,7 @@ import CartLayout from 'src/layouts/CartLayout/CartLayout'
 import UserLayout from 'src/pages/User/layouts/UserLayout'
 import ChangePassword from 'src/pages/User/pages/ChangePassword'
 import HistoryPurchase from 'src/pages/User/pages/HistoryPurchase'
+import NotFound from 'src/pages/NotFound'
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useContext(AppContext)
@@ -39,6 +40,14 @@ const useRouteElement = () => {
       element: (
         <MainLayout>
           <ProductDetail />
+        </MainLayout>
+      )
+    },
+    {
+      path: '*',
+      element: (
+        <MainLayout>
+          <NotFound />
         </MainLayout>
       )
     },

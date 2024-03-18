@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button } from 'flowbite-react'
 import purchasesApi from 'src/apis/purchases.api'

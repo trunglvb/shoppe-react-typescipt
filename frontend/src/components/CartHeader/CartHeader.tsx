@@ -1,4 +1,4 @@
-import { Link, redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
 import NavHeader from '../NavHeader'
 import useSearchProducts from 'src/hooks/useSearchProducts'
