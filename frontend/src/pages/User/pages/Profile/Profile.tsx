@@ -21,7 +21,7 @@ type IFormDataError = Omit<IFormData, 'date_of_birth'> & {
   date_of_birth: string
 }
 
-const registerSchema = userSchema.pick(['name', 'phone', 'address', 'date_of_birth', 'avatar'])
+const profileSchema = userSchema.pick(['name', 'phone', 'address', 'date_of_birth', 'avatar'])
 const Profile = () => {
   const { setProfile } = useContext(AppContext)
   const [file, setFile] = useState<File>()
@@ -41,7 +41,7 @@ const Profile = () => {
       avatar: '',
       date_of_birth: new Date(1990, 0, 1)
     },
-    resolver: yupResolver(registerSchema)
+    resolver: yupResolver(profileSchema)
   })
 
   const { data: profileData, refetch } = useQuery({
@@ -50,6 +50,8 @@ const Profile = () => {
   })
 
   const profile = profileData?.data.data
+  const previewImage = file ? URL.createObjectURL(file) : ''
+  const avatar = watch('avatar')
 
   useEffect(() => {
     if (profile) {
@@ -103,9 +105,6 @@ const Profile = () => {
       }
     }
   })
-
-  const previewImage = file ? URL.createObjectURL(file) : ''
-  const avatar = watch('avatar')
 
   return (
     <>

@@ -24,7 +24,7 @@ const Header = () => {
   //khi chuyen trang thi header chi rerender chu khong bi unmount
   // => query nay khong bi inactive => khong bi goi lai
   const { data: purchasesInCartData } = useQuery({
-    queryKey: ['product', { status: purchasesStatus.inCart }],
+    queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchasesApi.getPurchasesList({ status: purchasesStatus.inCart }),
     enabled: isAuthenticated
   })

@@ -20,7 +20,7 @@ const Cart = () => {
   const choosenPurchasesLocationId = (location?.state as { purchasesId: string | null })?.purchasesId
   const { extendedPurchases, setExtendedPurchases } = useContext(AppContext)
   const { data: purchasesInCartData, refetch } = useQuery({
-    queryKey: ['product', { status: purchasesStatus.inCart }],
+    queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchasesApi.getPurchasesList({ status: purchasesStatus.inCart })
   })
   const purchasesInCart = purchasesInCartData?.data?.data

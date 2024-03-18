@@ -30,6 +30,7 @@ const InputFile = (props: IInputFileProps) => {
         ref={fileInputRef}
         onChange={onFileChange}
         onClick={(event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+          //fix loi chon cung 1 anh
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(event.target as any).value = null
         }}

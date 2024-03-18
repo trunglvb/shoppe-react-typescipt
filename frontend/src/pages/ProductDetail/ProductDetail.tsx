@@ -80,7 +80,7 @@ const ProductDetail = () => {
     onSuccess: () => {
       toast.success('Thêm sản phẩm vào giỏ hàng thành công', { autoClose: 2000 })
       queryClient.invalidateQueries({
-        queryKey: ['product', { status: purchasesStatus.inCart }]
+        queryKey: ['purchases', { status: purchasesStatus.inCart }]
       })
     }
   })
