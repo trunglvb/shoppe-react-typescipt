@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { IProductListConfig, IQueryConfig } from 'src/types/product.type'
 import { useNavigate, createSearchParams, Link } from 'react-router-dom'
 import path from 'src/constants/path'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 
 interface ISortProductListProps {
   queryConfig: IQueryConfig

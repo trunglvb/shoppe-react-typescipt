@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ISchema, schema } from 'src/utils/rules'
 import { createSearchParams, useNavigate } from 'react-router-dom'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import { IQueryConfig } from 'src/types/product.type'
 import path from 'src/constants/path'
 

@@ -10,7 +10,7 @@ import QuantityController from 'src/components/QuantityController/QuantityContro
 import { ICartParams, IPurchase } from 'src/types/purchases.type'
 import { produce } from 'immer'
 import { toast } from 'react-toastify'
-import { keyBy } from 'lodash'
+import keyBy from 'lodash/keyBy'
 import { AppContext } from 'src/contexts/app.context'
 import noproduct from 'src/assets/images/no-product.png'
 import path from 'src/constants/path'

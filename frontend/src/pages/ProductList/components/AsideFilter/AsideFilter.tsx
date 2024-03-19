@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { INoUndefineField } from 'src/types/utils.type'
 import RatingStars from '../RatingStarts/RatingStars'
 import { IQueryConfig } from 'src/types/product.type'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import { v4 as uuidv4 } from 'uuid'
 
 interface ICategoriesProps {

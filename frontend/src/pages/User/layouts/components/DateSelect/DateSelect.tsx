@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { range } from 'lodash'
+import range from 'lodash/range'
 import React, { useEffect, useState } from 'react'
 
 interface IDateSelectProps {
