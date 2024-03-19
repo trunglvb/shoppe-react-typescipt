@@ -7,20 +7,28 @@ import {
   getAccessTokenFromLocalStorage,
   clearLocalStorage,
   saveAccessTokenToLocalStorage,
-  saveProfileToLocalStorage
+  saveProfileToLocalStorage,
+  saveRefreshTokenToLocalStorage,
+  getRefreshTokenFromLocalStorage
 } from './auth'
-import path from 'src/constants/path'
+import { URL_AUTH } from 'src/apis/auth.api'
 
 class Http {
   instance: AxiosInstance
   private accessToken: string // luu tren RAM
+  private refreshToken: string // luu tren RAM
+  private refreshTokenRequest: Promise<string> | null
   constructor() {
     this.accessToken = getAccessTokenFromLocalStorage()
+    this.refreshToken = getRefreshTokenFromLocalStorage()
+
     this.instance = axios.create({
       baseURL: config.baseURL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'expire-access-token': 10, //10s
+        'expire-refresh-token': 60 * 60
       }
     })
     //voi route can xac thuc, gui token len bang header voi key la authorization
@@ -39,12 +47,15 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
-        if (url === path.login || url === path.register) {
+        if (url === URL_AUTH.LOGIN || url === URL_AUTH.REGISTER) {
           this.accessToken = (response.data as IAuthResponse).data.access_token
+          this.refreshToken = (response.data as IAuthResponse).data.refresh_token
           saveAccessTokenToLocalStorage(this.accessToken)
+          saveRefreshTokenToLocalStorage(this.refreshToken)
           saveProfileToLocalStorage(response.data.data.user)
-        } else if (url === path.logout) {
+        } else if (url === URL_AUTH.LOG_OUT) {
           this.accessToken = ''
+          this.refreshToken = ''
           clearLocalStorage()
         }
         // toast.success(response?.data.message)
@@ -63,6 +74,11 @@ class Http {
         return Promise.reject(error)
       }
     )
+  }
+
+  private handleRefreshToken() {
+    //this.instance.post tuong tu http.post
+    this.instance.post(URL_AUTH.REFRESH_TOKEN)
   }
 }
 

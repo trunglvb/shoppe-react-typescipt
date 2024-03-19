@@ -5,11 +5,19 @@ export const LocalStorageEventTarget = new EventTarget()
 export const saveAccessTokenToLocalStorage = (accessToken: string) => {
   localStorage.setItem('accessToken', accessToken)
 }
+
+export const saveRefreshTokenToLocalStorage = (refreshToken: string) => {
+  localStorage.setItem('refreshToken', refreshToken)
+}
+
 export const getAccessTokenFromLocalStorage = () => localStorage.getItem('accessToken') ?? ''
+
+export const getRefreshTokenFromLocalStorage = () => localStorage.getItem('refreshToken') ?? ''
 
 export const clearLocalStorage = () => {
   const clearLSEvent = new Event('clearLS')
   localStorage.removeItem('accessToken')
+  localStorage.removeItem('refreshToken')
   localStorage.removeItem('profile')
   LocalStorageEventTarget.dispatchEvent(clearLSEvent)
 }
