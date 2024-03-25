@@ -13,6 +13,7 @@ import RatingStars from '../RatingStarts/RatingStars'
 import { IQueryConfig } from 'src/types/product.type'
 import omit from 'lodash/omit'
 import { v4 as uuidv4 } from 'uuid'
+import { useTranslation } from 'react-i18next'
 
 interface ICategoriesProps {
   queryConfig: IQueryConfig
@@ -21,6 +22,7 @@ type IFormData = INoUndefineField<Pick<ISchema, 'price_min' | 'price_max'>>
 
 const priceSchema = schema.pick(['price_min', 'price_max'])
 const AsideFilter = (props: ICategoriesProps) => {
+  const { t } = useTranslation()
   const { queryConfig } = props
   const navigate = useNavigate()
 
@@ -82,7 +84,7 @@ const AsideFilter = (props: ICategoriesProps) => {
             </g>
           </g>
         </svg>
-        Tất cả danh mục
+        {t('PRODUCT_ALL_CATEGORY')}
       </Link>
       <div className='my-4 h-[1px] bg-gray-300'></div>
       <ul>
@@ -133,7 +135,7 @@ const AsideFilter = (props: ICategoriesProps) => {
             ></polyline>
           </g>
         </svg>
-        Bộ lọc tìm kiếm
+        {t('PRODUCT_FILTER')}
       </Link>
       <div className='my-4 h-[1px] bg-gray-300'></div>
       <div className='my-5'>

@@ -1,7 +1,7 @@
 import axios, { AxiosError, type AxiosInstance } from 'axios'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { toast } from 'react-toastify'
-import { IAuthResponse } from 'src/types/auth.type'
+import { IAuthResponse, IRefreshTokenResponse } from 'src/types/auth.type'
 import config from './config'
 import {
   getAccessTokenFromLocalStorage,
@@ -12,6 +12,7 @@ import {
   getRefreshTokenFromLocalStorage
 } from './auth'
 import { URL_AUTH } from 'src/apis/auth.api'
+import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
 
 class Http {
   instance: AxiosInstance
@@ -21,14 +22,15 @@ class Http {
   constructor() {
     this.accessToken = getAccessTokenFromLocalStorage()
     this.refreshToken = getRefreshTokenFromLocalStorage()
+    this.refreshTokenRequest = null
 
     this.instance = axios.create({
       baseURL: config.baseURL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json',
-        'expire-access-token': 10, //10s
-        'expire-refresh-token': 60 * 60
+        'Content-Type': 'application/json'
+        // 'expire-access-token': 10, //10s
+        // 'expire-refresh-token': 60 * 60
       }
     })
     //voi route can xac thuc, gui token len bang header voi key la authorization
@@ -61,15 +63,34 @@ class Http {
         // toast.success(response?.data.message)
         return response
       },
-      function (error: AxiosError) {
+      (error: AxiosError) => {
+        const config = error.response?.config || { headers: {}, url: '' }
+        const url = config.url
         if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any = error.response?.data
           const message = data?.message ?? error.message
           toast.error(message)
         }
-        if (error.response?.status === HttpStatusCode.Unauthorized) {
+        if (isAxiosUnauthorizedError(error)) {
+          //trường hợp lỗi Token hết hạn và request đó không phải là request refresh token thì mới gọi refresh token
+          //nếu request refresh token bị lỗi thì không tiến hành gọi nữa
+          console.log(url)
+          if (isAxiosExpiredTokenError(error) && url !== URL_AUTH.REFRESH_TOKEN) {
+            this.refreshTokenRequest = this.refreshTokenRequest
+              ? this.refreshTokenRequest
+              : this.handleRefreshToken().finally(() => {
+                  this.refreshTokenRequest = null
+                })
+            return this.refreshTokenRequest.then((access_token) => {
+              //res la access_token duoc return trong handleRefreshToken
+
+              return this.instance({ ...config, headers: { ...config.headers, authorization: access_token } })
+            })
+          }
           clearLocalStorage()
+          this.accessToken = ''
+          this.refreshToken = ''
         }
         return Promise.reject(error)
       }
@@ -78,7 +99,24 @@ class Http {
 
   private handleRefreshToken() {
     //this.instance.post tuong tu http.post
-    this.instance.post(URL_AUTH.REFRESH_TOKEN)
+    return this.instance
+      .post<IRefreshTokenResponse>(URL_AUTH.REFRESH_TOKEN, {
+        refresh_token: this.refreshToken
+      })
+      .then((response) => {
+        console.log('response', response)
+        const { access_token } = response.data.data
+        saveAccessTokenToLocalStorage(access_token)
+        this.accessToken = access_token
+        return access_token
+      })
+      .catch((error) => {
+        //xay ra loi khi refresh_token het han
+        clearLocalStorage()
+        this.accessToken = ''
+        this.refreshToken = ''
+        throw error
+      })
   }
 }
 

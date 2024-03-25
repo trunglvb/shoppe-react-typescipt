@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import './index.css'
 import { AppProvider } from './contexts/app.context'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoudary'
+import 'src/i18n/i18n'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 const queryClient = new QueryClient({
