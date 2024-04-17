@@ -13,7 +13,7 @@ interface IAppContexts {
   setProfile: React.Dispatch<React.SetStateAction<IUser | null>>
   extendedPurchases: IExtendedPurchases[]
   setExtendedPurchases: React.Dispatch<React.SetStateAction<IExtendedPurchases[]>>
-  reset: () => void
+  resetBrowser: () => void
 }
 
 const initialContext: IAppContexts = {
@@ -23,7 +23,7 @@ const initialContext: IAppContexts = {
   setProfile: () => null,
   extendedPurchases: [],
   setExtendedPurchases: () => null,
-  reset: () => null
+  resetBrowser: () => null
 }
 
 export const AppContext = createContext<IAppContexts>(initialContext)
@@ -33,7 +33,7 @@ export const AppProvider = (props: IAppContextsProps) => {
   const [profile, setProfile] = useState<IUser | null>(initialContext.profile)
   const [extendedPurchases, setExtendedPurchases] = useState<IExtendedPurchases[]>([])
 
-  const reset = () => {
+  const resetBrowser = () => {
     setIsAuthenticated(false)
     setProfile(null)
     setExtendedPurchases([])
@@ -47,7 +47,7 @@ export const AppProvider = (props: IAppContextsProps) => {
       setProfile,
       extendedPurchases,
       setExtendedPurchases,
-      reset
+      resetBrowser
     }),
     [isAuthenticated, setIsAuthenticated, profile, setProfile, setExtendedPurchases, extendedPurchases]
   )

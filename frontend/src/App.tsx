@@ -7,7 +7,7 @@ import { LocalStorageEventTarget } from './utils/auth'
 import { AppContext } from './contexts/app.context'
 function App() {
   const routeElement = useRouteElement()
-  const { reset } = useContext(AppContext)
+  const { resetBrowser } = useContext(AppContext)
   const ScrollToTop = () => {
     const { pathname } = useLocation()
     useEffect(() => {
@@ -17,11 +17,11 @@ function App() {
   }
 
   useEffect(() => {
-    LocalStorageEventTarget.addEventListener('clearLS', reset)
+    LocalStorageEventTarget.addEventListener('clearLS', resetBrowser)
     return () => {
-      LocalStorageEventTarget.removeEventListener('clearLS', reset)
+      LocalStorageEventTarget.removeEventListener('clearLS', resetBrowser)
     }
-  }, [reset])
+  }, [resetBrowser])
 
   return (
     <>
