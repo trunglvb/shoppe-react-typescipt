@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { Helmet } from 'react-helmet'
 import { Link, createSearchParams } from 'react-router-dom'
 import purchasesApi from 'src/apis/purchases.api'
 import path from 'src/constants/path'
@@ -29,6 +30,10 @@ const HistoryPurchase = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Đơn mua</title>
+        <meta name='description' content='Đơn mua' />
+      </Helmet>
       <div className='overflow-auto'>
         <div className='min-w-[700px]'>
           <div className='sticky top-0 flex rounded-t-sm shadow-sm'>

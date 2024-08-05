@@ -14,6 +14,7 @@ import { ICartParams } from 'src/types/purchases.type'
 import { purchasesStatus } from 'src/constants/purchases'
 import { toast } from 'react-toastify'
 import path from 'src/constants/path'
+import { Helmet } from 'react-helmet'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -108,6 +109,10 @@ const ProductDetail = () => {
 
   return (
     <div className='bg-gray-200 py-6'>
+      <Helmet>
+        <title>{product?.name}</title>
+        <meta name='description' content='Thông tin chi tiết sản phẩm' />
+      </Helmet>
       <div className='container'>
         <div className='bg-white p-4 shadow-sm'>
           <div className='grid grid-cols-12'>

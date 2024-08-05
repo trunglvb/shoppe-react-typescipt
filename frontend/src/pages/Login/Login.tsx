@@ -11,6 +11,7 @@ import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button/Button'
 import path from 'src/constants/path'
+import { Helmet } from 'react-helmet'
 
 type IFormData = Pick<ISchema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
@@ -53,6 +54,10 @@ const Login = () => {
   })
   return (
     <div className='bg-orange'>
+      <Helmet>
+        <title>Đăng nhập | Shopee</title>
+        <meta name='description' content='Đăng nhập vào hệ thống' />
+      </Helmet>
       <div className='container'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>

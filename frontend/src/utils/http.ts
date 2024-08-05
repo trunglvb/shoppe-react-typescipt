@@ -30,8 +30,8 @@ class Http {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
-        'expire-access-token': 10, //10s
-        'expire-refresh-token': 60 * 60
+        'expire-access-token': 60 * 60 * 24 * 7, // 7 ngày
+        'expire-refresh-token': 60 * 60 * 24 * 160 // 160 ngày
       }
     })
     //voi route can xac thuc, gui token len bang header voi key la authorization

@@ -14,6 +14,7 @@ import { saveProfileToLocalStorage } from 'src/utils/auth'
 import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { IErrorResponseApi } from 'src/types/utils.type'
 import InputFile from 'src/components/InputFile'
+import { Helmet } from 'react-helmet'
 
 // can convert type formError cua avatar sang string vi error se co dang giong nhu data api tra ve
 type IFormData = Pick<IUserSchema, 'name' | 'phone' | 'address' | 'date_of_birth' | 'avatar'>
@@ -108,6 +109,10 @@ const Profile = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Tài khoản của tôi</title>
+        <meta name='description' content='Thông tin tài khoản' />
+      </Helmet>
       <div className='border-b border-b-gray-200 py-3'>
         <div className='text-lg font-medium capitalize text-gray-900'>Hồ sơ của tôi</div>
         <div className='mt-1 text-sm text-gray-700'>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
