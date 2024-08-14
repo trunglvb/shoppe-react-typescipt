@@ -1,5 +1,5 @@
+import { isAxiosUnprocessableEntityError, isAxiosError } from 'src/utils/utils'
 import { describe, it, expect } from 'vitest'
-import { isAxiosError } from '../utils'
 import { AxiosError } from 'axios'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 
@@ -16,9 +16,9 @@ describe('isAxiosError', () => {
 
 describe('isAxiosUnprocessableEntityError', () => {
   it('isAxiosError return true', () => {
-    expect(isAxiosError(new Error())).toBe(false)
+    expect(isAxiosUnprocessableEntityError(new AxiosError())).toBe(false)
     expect(
-      isAxiosError(
+      isAxiosUnprocessableEntityError(
         new AxiosError(undefined, undefined, undefined, undefined, {
           status: HttpStatusCode.UnprocessableEntity,
           data: null
