@@ -8,6 +8,7 @@ import { AppContext } from './contexts/app.context'
 function App() {
   const routeElement = useRouteElement()
   const { resetBrowser } = useContext(AppContext)
+
   const ScrollToTop = () => {
     const { pathname } = useLocation()
     useEffect(() => {

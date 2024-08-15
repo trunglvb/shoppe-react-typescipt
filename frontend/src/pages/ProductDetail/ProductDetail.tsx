@@ -17,6 +17,7 @@ import path from 'src/constants/path'
 import { Helmet } from 'react-helmet'
 
 const ProductDetail = () => {
+  console.log('check re-render')
   const { id } = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
