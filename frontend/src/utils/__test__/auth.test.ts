@@ -1,4 +1,3 @@
-import { IUser } from 'src/types/user.type'
 import {
   saveRefreshTokenToLocalStorage,
   saveAccessTokenToLocalStorage,
