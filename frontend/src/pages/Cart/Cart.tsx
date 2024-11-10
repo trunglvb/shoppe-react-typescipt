@@ -128,7 +128,6 @@ const Cart = () => {
 
   const handleDeleteMultiplePurchases = () => {
     const purchasesIds = checkedPurchases?.map((purchases) => purchases._id)
-    console.log(purchasesIds)
     deletePurchasesMutation.mutate(purchasesIds)
   }
 
@@ -148,8 +147,8 @@ const Cart = () => {
       </Helmet>
       <div className='bg-neutral-100 py-16'>
         {extendedPurchases?.length > 0 ? (
-          <div className='container overflow-auto pl-0 pr-0'>
-            <div className='min-w-[1000px]'>
+          <div className='container pl-0 pr-0'>
+            <div className='max-h-[600px] min-w-[1000px] overflow-auto'>
               <div className='grid grid-cols-12 rounded-sm bg-white px-9 py-5 text-sm capitalize text-gray-500 shadow'>
                 <div className='col-span-6'>
                   <div className='flex items-center'>

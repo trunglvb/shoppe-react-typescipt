@@ -49,7 +49,6 @@ class Http {
     )
     this.instance.interceptors.response.use(
       (response) => {
-        console.log('response', response)
         const { url } = response.config //goi lai api login neu loi token, path cua api
         if (url === URL_AUTH.LOGIN || url === URL_AUTH.REGISTER) {
           this.accessToken = (response.data as IAuthResponse).data.access_token
@@ -82,7 +81,6 @@ class Http {
         if (isAxiosUnauthorizedError<IErrorResponseApi<{ name: string; message: string }>>(error)) {
           //trường hợp lỗi Token hết hạn và request đó không phải là request refreshTokenReq thì mới gọi refresh token
           //nếu request refresh token bị lỗi thì không tiến hành gọi nữa
-          console.log(url)
           if (isAxiosExpiredTokenError(error) && url !== URL_AUTH.REFRESH_TOKEN) {
             //kiem tra de voi nhieu api loi cung luc thi chi goi refresh token mot lan
             this.refreshTokenRequest = this.refreshTokenRequest
@@ -116,7 +114,6 @@ class Http {
         refresh_token: this.refreshToken
       })
       .then((response) => {
-        console.log('response', response)
         const { access_token } = response.data.data
         saveAccessTokenToLocalStorage(access_token)
         this.accessToken = access_token

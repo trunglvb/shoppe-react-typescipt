@@ -17,7 +17,6 @@ import path from 'src/constants/path'
 import { Helmet } from 'react-helmet'
 
 const ProductDetail = () => {
-  console.log('check re-render')
   const { id } = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -56,10 +55,14 @@ const ProductDetail = () => {
   }
 
   const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const rect = event.currentTarget.getBoundingClientRect()
+    const rect = event.currentTarget.getBoundingClientRect() //lay ra vi tri cua the div cha
+    console.log('react', rect)
+
     const image = imageRef.current as HTMLImageElement
-    const { naturalHeight, naturalWidth } = image
-    const { offsetX, offsetY } = event.nativeEvent
+    const { naturalHeight, naturalWidth } = image //kich thuoc mac dinh cua anh
+
+    const { offsetX, offsetY } = event.nativeEvent //vi tri x,y cua con tro chuot
+
     const top = offsetY * (1 - naturalHeight / rect.height)
     const left = offsetX * (1 - naturalWidth / rect.width)
     image.style.width = naturalWidth + 'px'
