@@ -1,0 +1,21 @@
+meta {
+  name: VerifyEmail
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:4000/api/users/verify-email
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjc1NWFjZTcwMGU1ZGMwOGE2Y2I0NGQ5IiwidmVyaWZ5IjowLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3MzU1Njg4ODUsImV4cCI6MTczNTU3MDY4NX0.I1hHffm-LorviUl-ezhXPb4EfAFuGJTNMxtO-3YpdkM
+}
+
+body:json {
+  {
+      "email_verify_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjc1NWFjZTcwMGU1ZGMwOGE2Y2I0NGQ5IiwidmVyaWZ5IjowLCJ0b2tlbl90eXBlIjozLCJpYXQiOjE3MzU1Njg5OTgsImV4cCI6MTczNjE3Mzc5OH0.D8PJXQFYZw-bPDbdin_3UH5frAL8JnJTv2B36L_DNh4"
+  }
+}

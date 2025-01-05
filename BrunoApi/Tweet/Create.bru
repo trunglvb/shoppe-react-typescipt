@@ -1,0 +1,27 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:4000/api/tweet/create
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcyY2Q3NzllNDgzNjc4NGZhYWE2NzVmIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3MzU3NDE0ODYsImV4cCI6MTczNTc0MzI4Nn0.R6eG4qd81Xfw2wWE31BMxRXb8SY4YzGMsvaDeAb9P84
+}
+
+body:json {
+  {
+    "type": 2, 
+    "audience": 0, 
+    "content": "comment no circle 3",
+    "parent_id": "6772af7990b007d455185659",
+    "hashtags": ["vietnam"],
+    "mentions": ["6755ace700e5dc08a6cb44d9"],
+    "medias": []
+  }
+}
